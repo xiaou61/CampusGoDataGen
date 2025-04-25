@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园地方坐标数据生成</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            padding: 10px;
+        }
+        .nav a {
+            margin: 0 20px;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .site-list {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .site-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .site-item:last-child {
+            border-bottom: none;
+        }
+        .site-item img {
+            max-width: 100px;
+            margin-right: 10px;
+        }
+        .image-list {
+            margin-top: 10px;
+            list-style-type: none;
+            padding: 0;
+        }
+        .image-list li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 校园地方坐标页面头部 -->
+    <div class="header">
+        <h1>校园地方坐标数据生成</h1>
+        <a href="index.html" style="color: white; text-decoration: none; font-size: 18px;">返回主页</a>
+    </div>
+
+    <!-- 校园地方坐标表单 -->
+    <div class="content">
+        <h2>生成校园地方坐标数据</h2>
+        <form id="siteForm">
+            <div class="form-group">
+                <label for="siteName">名称:</label>
+                <input type="text" id="siteName" name="siteName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="siteAliases">别名:</label>
+                <input type="text" id="siteAliases" name="siteAliases" required>
+            </div>
+
+            <div class="form-group">
+                <label for="siteDesc">描述:</label>
+                <textarea id="siteDesc" name="siteDesc" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="siteImg">默认图片URL:</label>
+                <input type="text" id="siteImg" name="siteImg" required>
+            </div>
+
+            <div class="form-group">
+                <label for="siteImages">轮播图图片URL:</label>
+                <input type="text" id="siteImageInput" name="siteImageInput">
+                <button type="button" class="button" onclick="addImage()">添加轮播图</button>
+                <ul id="imageList" class="image-list"></ul>
+            </div>
+
+            <div class="form-group">
+                <label for="siteLatitude">纬度:</label>
+                <input type="number" id="siteLatitude" name="siteLatitude" step="0.000001" required>
+            </div>
+
+            <div class="form-group">
+                <label for="siteLongitude">经度:</label>
+                <input type="number" id="siteLongitude" name="siteLongitude" step="0.000001" required>
+            </div>
+
+            <button type="button" class="button" onclick="addSite()">添加地点</button>
+        </form>
+    </div>
+
+    <!-- 生成的校园地方坐标列表 -->
+    <div id="siteList" class="site-list">
+        <h3>已添加的地点:</h3>
+        <ul id="siteListContent"></ul>
+    </div>
+
+    <button onclick="downloadSiteJSON()" class="button">下载JSON</button>
+</div>
+
+<script>
+    const siteData = [];
+
+    // 添加轮播图图片
+    function addImage() {
+        const imageInput = document.getElementById('siteImageInput');
+        const imageUrl = imageInput.value.trim();
+        if (imageUrl) {
+            const imageList = document.getElementById('imageList');
+            const listItem = document.createElement('li');
+            listItem.textContent = imageUrl;
+            imageList.appendChild(listItem);
+            imageInput.value = '';  // 清空输入框
+        }
+    }
+
+    // 添加校园地方坐标
+    function addSite() {
+        const siteName = document.getElementById('siteName').value;
+        const siteAliases = document.getElementById('siteAliases').value;
+        const siteDesc = document.getElementById('siteDesc').value;
+        const siteImg = document.getElementById('siteImg').value;
+        const siteImages = Array.from(document.getElementById('imageList').children).map(li => li.textContent);
+        const siteLatitude = parseFloat(document.getElementById('siteLatitude').value);
+        const siteLongitude = parseFloat(document.getElementById('siteLongitude').value);
+
+        const site = {
+            id: siteData.length + 1,
+            name: siteName,
+            aliases: siteAliases,
+            img: siteImg,
+            images: siteImages,
+            desc: siteDesc,
+            latitude: siteLatitude,
+            longitude: siteLongitude
+        };
+
+        siteData.push(site);
+        displaySites();
+        resetForm();
+    }
+
+    // 显示已添加的校园地方坐标
+    function displaySites() {
+        const siteListContent = document.getElementById('siteListContent');
+        siteListContent.innerHTML = '';
+        siteData.forEach((site) => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('site-item');
+            listItem.innerHTML = `
+                    <img src="${site.img}" alt="${site.name}">
+                    <strong>名称:</strong> ${site.name} <br>
+                    <strong>别名:</strong> ${site.aliases} <br>
+                    <strong>描述:</strong> ${site.desc} <br>
+                    <strong>纬度:</strong> ${site.latitude} <br>
+                    <strong>经度:</strong> ${site.longitude} <br>
+                    <strong>轮播图:</strong> ${site.images.join(', ')} <br>
+                `;
+            siteListContent.appendChild(listItem);
+        });
+    }
+
+    // 重置表单
+    function resetForm() {
+        document.getElementById('siteName').value = '';
+        document.getElementById('siteAliases').value = '';
+        document.getElementById('siteDesc').value = '';
+        document.getElementById('siteImg').value = '';
+        document.getElementById('siteImageInput').value = '';
+        document.getElementById('siteLatitude').value = '';
+        document.getElementById('siteLongitude').value = '';
+        document.getElementById('imageList').innerHTML = '';  // 清空轮播图列表
+    }
+
+    // 下载JSON
+    function downloadSiteJSON() {
+        const jsonData = JSON.stringify(siteData, null, 2);
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'site_data.json';
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+</body>
+</html>

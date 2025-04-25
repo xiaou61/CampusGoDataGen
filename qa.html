@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科师校园导航数据生成系统 - AI问题生成</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            padding: 10px;
+        }
+        .nav a {
+            margin: 0 20px;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .qa-list {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .qa-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .qa-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- AI问题页面头部 -->
+    <div class="header">
+        <h1>科师校园导航数据生成系统</h1>
+        <a href="index.html" style="color: white; text-decoration: none; font-size: 18px;">返回主页</a>
+    </div>
+
+    <!-- AI问题表单 -->
+    <div class="content">
+        <h2>生成AI问题</h2>
+        <form id="qaForm">
+            <div class="form-group">
+                <label for="question">问题:</label>
+                <input type="text" id="question" name="q" required>
+            </div>
+            <div class="form-group">
+                <label for="answer">回答:</label>
+                <textarea id="answer" name="a" required></textarea>
+            </div>
+            <button type="button" class="button" onclick="addQA()">添加问题</button>
+        </form>
+    </div>
+
+    <!-- 生成的AI问题列表 -->
+    <div id="qaList" class="qa-list">
+        <h3>已添加的AI问题:</h3>
+        <ul id="qaListContent"></ul>
+    </div>
+
+    <button onclick="downloadJSON()" class="button">下载JSON</button>
+</div>
+
+<script>
+    const qaData = [];
+
+    // 添加AI问题
+    function addQA() {
+        const question = document.getElementById('question').value;
+        const answer = document.getElementById('answer').value;
+
+        const qa = {
+            q: question,
+            a: answer
+        };
+
+        qaData.push(qa);
+        displayQA();
+        resetForm();
+    }
+
+    // 显示已添加的AI问题
+    function displayQA() {
+        const qaListContent = document.getElementById('qaListContent');
+        qaListContent.innerHTML = '';
+        qaData.forEach((qa, index) => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('qa-item');
+            listItem.innerHTML = `
+                    <strong>问题:</strong> ${qa.q} <br>
+                    <strong>回答:</strong> ${qa.a} <br>
+                `;
+            qaListContent.appendChild(listItem);
+        });
+    }
+
+    // 重置表单
+    function resetForm() {
+        document.getElementById('question').value = '';
+        document.getElementById('answer').value = '';
+    }
+
+    // 下载JSON
+    function downloadJSON() {
+        const jsonData = JSON.stringify({ qa_data: qaData }, null, 2);
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'qa_data.json';
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+</body>
+</html>

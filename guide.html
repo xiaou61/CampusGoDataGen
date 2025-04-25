@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科师校园导航数据生成系统 - 校园指南生成</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            padding: 10px;
+        }
+        .nav a {
+            margin: 0 20px;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .guide-list {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .guide-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .guide-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 校园指南页面头部 -->
+    <div class="header">
+        <h1>科师校园导航数据生成系统</h1>
+        <a href="index.html" style="color: white; text-decoration: none; font-size: 18px;">返回主页</a>
+    </div>
+
+    <!-- 校园指南表单 -->
+    <div class="content">
+        <h2>生成校园指南</h2>
+        <form id="guideForm">
+            <div class="form-group">
+                <label for="title">标题:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="content">内容:</label>
+                <textarea id="content" name="content" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="imageList">图片URL (可选, 逗号分隔):</label>
+                <input type="text" id="imageList" name="imageList">
+            </div>
+            <div class="form-group">
+                <label for="keywords">关键词 (逗号分隔):</label>
+                <input type="text" id="keywords" name="keywords" required>
+            </div>
+            <button type="button" class="button" onclick="addGuide()">添加校园指南</button>
+        </form>
+    </div>
+
+    <!-- 生成的校园指南列表 -->
+    <div id="guideList" class="guide-list">
+        <h3>已添加的校园指南:</h3>
+        <ul id="guideListContent"></ul>
+    </div>
+
+    <button onclick="downloadJSON()" class="button">下载JSON</button>
+</div>
+
+<script>
+    const guides = [];
+
+    // 添加校园指南
+    function addGuide() {
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const imageList = document.getElementById('imageList').value.split(',').map(url => url.trim());
+        const keywords = document.getElementById('keywords').value.split(',').map(keyword => keyword.trim());
+
+        const guide = {
+            title: title,
+            content: content,
+            imageList: imageList,
+            keywords: keywords
+        };
+
+        guides.push(guide);
+        displayGuides();
+        resetForm();
+    }
+
+    // 显示已添加的校园指南
+    function displayGuides() {
+        const guideListContent = document.getElementById('guideListContent');
+        guideListContent.innerHTML = '';
+        guides.forEach((guide, index) => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('guide-item');
+            listItem.innerHTML = `
+                    <strong>标题:</strong> ${guide.title} <br>
+                    <strong>内容:</strong> ${guide.content} <br>
+                    <strong>图片:</strong> ${guide.imageList.join(', ')} <br>
+                    <strong>关键词:</strong> ${guide.keywords.join(', ')} <br>
+                `;
+            guideListContent.appendChild(listItem);
+        });
+    }
+
+    // 重置表单
+    function resetForm() {
+        document.getElementById('title').value = '';
+        document.getElementById('content').value = '';
+        document.getElementById('imageList').value = '';
+        document.getElementById('keywords').value = '';
+    }
+
+    // 下载JSON
+    function downloadJSON() {
+        const jsonData = JSON.stringify({ school_guide: guides }, null, 2);
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'school_guide.json';
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+</body>
+</html>
