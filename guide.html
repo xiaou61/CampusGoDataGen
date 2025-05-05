@@ -3,189 +3,523 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>科师校园导航数据生成系统 - 校园指南生成</title>
+    <title>科师校园导航数据生成系统 - 校园指南管理</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
         .container {
-            width: 80%;
+            max-width: 1200px;
             margin: 0 auto;
-        }
-        .header {
-            background-color: #007bff;
-            color: white;
-            text-align: center;
             padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .back-button {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 8px 16px;
+            border: 2px solid white;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background-color: white;
+            color: var(--primary-color);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
             margin-bottom: 40px;
         }
-        .nav {
-            display: flex;
-            justify-content: center;
-            background-color: #007bff;
-            padding: 10px;
+
+        @media (max-width: 992px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
         }
-        .nav a {
-            margin: 0 20px;
-            color: white;
-            font-size: 18px;
-            text-decoration: none;
+
+        .form-section, .list-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
         }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .content {
-            padding: 20px;
-        }
+
         .form-group {
             margin-bottom: 20px;
         }
+
         label {
-            font-size: 16px;
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
         }
+
         input, textarea {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            font-size: 16px;
+            padding: 12px;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            font-size: 1rem;
+            transition: var(--transition);
         }
+
         textarea {
+            min-height: 150px;
             resize: vertical;
         }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
         .button {
-            background-color: #007bff;
+            background-color: var(--primary-color);
             color: white;
             padding: 12px 24px;
-            font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: var(--transition);
         }
+
         .button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
-        .guide-list {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        .button.secondary {
+            background-color: var(--secondary-color);
         }
+
+        .button.secondary:hover {
+            background-color: #5a6268;
+        }
+
         .guide-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
         }
-        .guide-item:last-child {
-            border-bottom: none;
+
+        .guide-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .guide-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .guide-item p {
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+        }
+
+        .guide-item .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .image-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .image-list li {
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+
+        .keyword-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .keyword {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .download-button {
+            background-color: #28a745;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+
+        .download-button:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .guide-item .actions {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <header>
+        <div class="header-content">
+            <h1>校园指南管理</h1>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+        </div>
+    </header>
 
-<div class="container">
-    <!-- 校园指南页面头部 -->
-    <div class="header">
-        <h1>科师校园导航数据生成系统</h1>
-        <a href="index.html" style="color: white; text-decoration: none; font-size: 18px;">返回主页</a>
+    <div class="container">
+        <div class="content">
+            <div class="form-section">
+                <h2>添加/编辑指南</h2>
+                <div class="form-group">
+                    <label for="jsonFile">上传JSON文件:</label>
+                    <input type="file" id="jsonFile" accept=".json" onchange="loadJSONFile(event)">
+                </div>
+                <form id="guideForm">
+                    <div class="form-group">
+                        <label for="guideTitle">标题:</label>
+                        <input type="text" id="guideTitle" name="guideTitle" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guideContent">内容:</label>
+                        <textarea id="guideContent" name="guideContent" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guideImages">图片URL:</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="guideImageInput" name="guideImageInput">
+                            <button type="button" class="button" onclick="addImage()">
+                                <i class="fas fa-plus"></i> 添加
+                            </button>
+                        </div>
+                        <ul id="imageList" class="image-list"></ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guideKeywords">关键词:</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="guideKeywordInput" name="guideKeywordInput">
+                            <button type="button" class="button" onclick="addKeyword()">
+                                <i class="fas fa-plus"></i> 添加
+                            </button>
+                        </div>
+                        <div id="keywordList" class="keyword-list"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="button" onclick="addGuide()">
+                            <i class="fas fa-plus"></i> 添加指南
+                        </button>
+                        <button type="button" class="button" onclick="updateGuide()" style="display: none;" id="updateButton">
+                            <i class="fas fa-save"></i> 更新指南
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="list-section">
+                <h2>已添加的指南</h2>
+                <div id="guideListContent"></div>
+            </div>
+        </div>
+
+        <div class="download-section">
+            <button onclick="downloadGuideJSON()" class="button download-button">
+                <i class="fas fa-download"></i> 下载JSON数据
+            </button>
+        </div>
     </div>
 
-    <!-- 校园指南表单 -->
-    <div class="content">
-        <h2>生成校园指南</h2>
-        <form id="guideForm">
-            <div class="form-group">
-                <label for="title">标题:</label>
-                <input type="text" id="title" name="title" required>
-            </div>
-            <div class="form-group">
-                <label for="content">内容:</label>
-                <textarea id="content" name="content" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="imageList">图片URL (可选, 逗号分隔):</label>
-                <input type="text" id="imageList" name="imageList">
-            </div>
-            <div class="form-group">
-                <label for="keywords">关键词 (逗号分隔):</label>
-                <input type="text" id="keywords" name="keywords" required>
-            </div>
-            <button type="button" class="button" onclick="addGuide()">添加校园指南</button>
-        </form>
-    </div>
+    <script>
+        const guides = [];
+        let editingGuideId = null;
 
-    <!-- 生成的校园指南列表 -->
-    <div id="guideList" class="guide-list">
-        <h3>已添加的校园指南:</h3>
-        <ul id="guideListContent"></ul>
-    </div>
+        // 加载JSON文件
+        function loadJSONFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const jsonData = JSON.parse(e.target.result);
+                        guides.length = 0; // 清空现有数据
+                        jsonData.forEach(guide => guides.push(guide));
+                        displayGuides();
+                    } catch (error) {
+                        alert('文件格式错误，请上传有效的JSON文件');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
 
-    <button onclick="downloadJSON()" class="button">下载JSON</button>
-</div>
-
-<script>
-    const guides = [];
-
-    // 添加校园指南
-    function addGuide() {
-        const title = document.getElementById('title').value;
-        const content = document.getElementById('content').value;
-        const imageList = document.getElementById('imageList').value.split(',').map(url => url.trim());
-        const keywords = document.getElementById('keywords').value.split(',').map(keyword => keyword.trim());
-
-        const guide = {
-            title: title,
-            content: content,
-            imageList: imageList,
-            keywords: keywords
-        };
-
-        guides.push(guide);
-        displayGuides();
-        resetForm();
-    }
-
-    // 显示已添加的校园指南
-    function displayGuides() {
-        const guideListContent = document.getElementById('guideListContent');
-        guideListContent.innerHTML = '';
-        guides.forEach((guide, index) => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('guide-item');
-            listItem.innerHTML = `
-                    <strong>标题:</strong> ${guide.title} <br>
-                    <strong>内容:</strong> ${guide.content} <br>
-                    <strong>图片:</strong> ${guide.imageList.join(', ')} <br>
-                    <strong>关键词:</strong> ${guide.keywords.join(', ')} <br>
+        // 添加图片
+        function addImage() {
+            const imageInput = document.getElementById('guideImageInput');
+            const imageUrl = imageInput.value.trim();
+            if (imageUrl) {
+                const imageList = document.getElementById('imageList');
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    ${imageUrl}
+                    <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: var(--secondary-color); cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
                 `;
-            guideListContent.appendChild(listItem);
-        });
-    }
+                imageList.appendChild(listItem);
+                imageInput.value = '';  // 清空输入框
+            }
+        }
 
-    // 重置表单
-    function resetForm() {
-        document.getElementById('title').value = '';
-        document.getElementById('content').value = '';
-        document.getElementById('imageList').value = '';
-        document.getElementById('keywords').value = '';
-    }
+        // 添加关键词
+        function addKeyword() {
+            const keywordInput = document.getElementById('guideKeywordInput');
+            const keyword = keywordInput.value.trim();
+            if (keyword) {
+                const keywordList = document.getElementById('keywordList');
+                const keywordElement = document.createElement('span');
+                keywordElement.classList.add('keyword');
+                keywordElement.innerHTML = `
+                    ${keyword}
+                    <button onclick="this.parentElement.remove()" style="background: none; border: none; color: var(--secondary-color); cursor: pointer; margin-left: 4px;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                keywordList.appendChild(keywordElement);
+                keywordInput.value = '';  // 清空输入框
+            }
+        }
 
-    // 下载JSON
-    function downloadJSON() {
-        const jsonData = JSON.stringify({ school_guide: guides }, null, 2);
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'school_guide.json';
-        link.click();
-        URL.revokeObjectURL(url);
-    }
-</script>
+        // 添加校园指南
+        function addGuide() {
+            const title = document.getElementById('guideTitle').value;
+            const content = document.getElementById('guideContent').value;
+            const images = Array.from(document.getElementById('imageList').children).map(li => li.textContent.trim());
+            const keywords = Array.from(document.getElementById('keywordList').children).map(span => span.textContent.trim());
 
+            const guide = {
+                id: guides.length + 1,
+                title: title,
+                content: content,
+                images: images,
+                keywords: keywords
+            };
+
+            guides.push(guide);
+            displayGuides();
+            resetForm();
+        }
+
+        // 更新校园指南
+        function updateGuide() {
+            if (editingGuideId === null) return;
+
+            const title = document.getElementById('guideTitle').value;
+            const content = document.getElementById('guideContent').value;
+            const images = Array.from(document.getElementById('imageList').children).map(li => li.textContent.trim());
+            const keywords = Array.from(document.getElementById('keywordList').children).map(span => span.textContent.trim());
+
+            const guideIndex = guides.findIndex(guide => guide.id === editingGuideId);
+            if (guideIndex !== -1) {
+                guides[guideIndex] = {
+                    id: editingGuideId,
+                    title: title,
+                    content: content,
+                    images: images,
+                    keywords: keywords
+                };
+            }
+
+            displayGuides();
+            resetForm();
+            editingGuideId = null;
+            document.getElementById('updateButton').style.display = 'none';
+        }
+
+        // 编辑校园指南
+        function editGuide(guideId) {
+            const guide = guides.find(g => g.id === guideId);
+            if (guide) {
+                document.getElementById('guideTitle').value = guide.title;
+                document.getElementById('guideContent').value = guide.content;
+                
+                const imageList = document.getElementById('imageList');
+                imageList.innerHTML = '';
+                guide.images.forEach(imageUrl => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        ${imageUrl}
+                        <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: var(--secondary-color); cursor: pointer;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    imageList.appendChild(listItem);
+                });
+
+                const keywordList = document.getElementById('keywordList');
+                keywordList.innerHTML = '';
+                guide.keywords.forEach(keyword => {
+                    const keywordElement = document.createElement('span');
+                    keywordElement.classList.add('keyword');
+                    keywordElement.innerHTML = `
+                        ${keyword}
+                        <button onclick="this.parentElement.remove()" style="background: none; border: none; color: var(--secondary-color); cursor: pointer; margin-left: 4px;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    keywordList.appendChild(keywordElement);
+                });
+
+                editingGuideId = guideId;
+                document.getElementById('updateButton').style.display = 'inline-block';
+            }
+        }
+
+        // 删除校园指南
+        function deleteGuide(guideId) {
+            if (confirm('确定要删除这个指南吗？')) {
+                const guideIndex = guides.findIndex(guide => guide.id === guideId);
+                if (guideIndex !== -1) {
+                    guides.splice(guideIndex, 1);
+                    displayGuides();
+                }
+            }
+        }
+
+        // 显示已添加的校园指南
+        function displayGuides() {
+            const guideListContent = document.getElementById('guideListContent');
+            guideListContent.innerHTML = '';
+            guides.forEach((guide) => {
+                const listItem = document.createElement('div');
+                listItem.classList.add('guide-item');
+                listItem.innerHTML = `
+                    <h3>${guide.title}</h3>
+                    <p><strong>内容:</strong> ${guide.content}</p>
+                    <p><strong>图片:</strong></p>
+                    <ul class="image-list">
+                        ${guide.images.map(img => `<li>${img}</li>`).join('')}
+                    </ul>
+                    <p><strong>关键词:</strong></p>
+                    <div class="keyword-list">
+                        ${guide.keywords.map(keyword => `<span class="keyword">${keyword}</span>`).join('')}
+                    </div>
+                    <div class="actions">
+                        <button onclick="editGuide(${guide.id})" class="button">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button onclick="deleteGuide(${guide.id})" class="button secondary">
+                            <i class="fas fa-trash"></i> 删除
+                        </button>
+                    </div>
+                `;
+                guideListContent.appendChild(listItem);
+            });
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('guideTitle').value = '';
+            document.getElementById('guideContent').value = '';
+            document.getElementById('guideImageInput').value = '';
+            document.getElementById('guideKeywordInput').value = '';
+            document.getElementById('imageList').innerHTML = '';
+            document.getElementById('keywordList').innerHTML = '';
+            document.getElementById('updateButton').style.display = 'none';
+        }
+
+        // 下载JSON
+        function downloadGuideJSON() {
+            const jsonData = JSON.stringify(guides, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'guide_data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
 </body>
 </html>
