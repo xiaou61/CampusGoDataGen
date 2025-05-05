@@ -3,246 +3,503 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>校园地方坐标数据生成</title>
+    <title>科师校园导航数据生成系统 - 校园地点管理</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
         .container {
-            width: 80%;
+            max-width: 1200px;
             margin: 0 auto;
-        }
-        .header {
-            background-color: #007bff;
-            color: white;
-            text-align: center;
             padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .back-button {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 8px 16px;
+            border: 2px solid white;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background-color: white;
+            color: var(--primary-color);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
             margin-bottom: 40px;
         }
-        .nav {
-            display: flex;
-            justify-content: center;
-            background-color: #007bff;
-            padding: 10px;
+
+        @media (max-width: 992px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
         }
-        .nav a {
-            margin: 0 20px;
-            color: white;
-            font-size: 18px;
-            text-decoration: none;
+
+        .form-section, .list-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
         }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .content {
-            padding: 20px;
-        }
+
         .form-group {
             margin-bottom: 20px;
         }
+
         label {
-            font-size: 16px;
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
         }
+
         input, textarea {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            font-size: 16px;
+            padding: 12px;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            font-size: 1rem;
+            transition: var(--transition);
         }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
         .button {
-            background-color: #007bff;
+            background-color: var(--primary-color);
             color: white;
             padding: 12px 24px;
-            font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: var(--transition);
         }
+
         .button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
-        .site-list {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        .button.secondary {
+            background-color: var(--secondary-color);
         }
+
+        .button.secondary:hover {
+            background-color: #5a6268;
+        }
+
         .site-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
         }
-        .site-item:last-child {
-            border-bottom: none;
+
+        .site-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
+
         .site-item img {
             max-width: 100px;
-            margin-right: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
         }
+
+        .site-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .site-item p {
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+        }
+
+        .site-item .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
         .image-list {
-            margin-top: 10px;
-            list-style-type: none;
+            list-style: none;
             padding: 0;
+            margin: 10px 0;
         }
+
         .image-list li {
-            margin: 5px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .download-button {
+            background-color: #28a745;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+
+        .download-button:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .site-item .actions {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <header>
+        <div class="header-content">
+            <h1>校园地点管理</h1>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+        </div>
+    </header>
 
-<div class="container">
-    <!-- 校园地方坐标页面头部 -->
-    <div class="header">
-        <h1>校园地方坐标数据生成</h1>
-        <a href="index.html" style="color: white; text-decoration: none; font-size: 18px;">返回主页</a>
+    <div class="container">
+        <div class="content">
+            <div class="form-section">
+                <h2>添加/编辑地点</h2>
+                <div class="form-group">
+                    <label for="jsonFile">上传JSON文件:</label>
+                    <input type="file" id="jsonFile" accept=".json" onchange="loadJSONFile(event)">
+                </div>
+                <form id="siteForm">
+                    <div class="form-group">
+                        <label for="siteName">名称:</label>
+                        <input type="text" id="siteName" name="siteName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="siteAliases">别名:</label>
+                        <input type="text" id="siteAliases" name="siteAliases" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="siteDesc">描述:</label>
+                        <textarea id="siteDesc" name="siteDesc" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="siteImg">默认图片URL:</label>
+                        <input type="text" id="siteImg" name="siteImg" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="siteImages">轮播图图片URL:</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="siteImageInput" name="siteImageInput">
+                            <button type="button" class="button" onclick="addImage()">
+                                <i class="fas fa-plus"></i> 添加
+                            </button>
+                        </div>
+                        <ul id="imageList" class="image-list"></ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="siteLatitude">纬度:</label>
+                        <input type="number" id="siteLatitude" name="siteLatitude" step="0.000001" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="siteLongitude">经度:</label>
+                        <input type="number" id="siteLongitude" name="siteLongitude" step="0.000001" required>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="button" onclick="addSite()">
+                            <i class="fas fa-plus"></i> 添加地点
+                        </button>
+                        <button type="button" class="button" onclick="updateSite()" style="display: none;" id="updateButton">
+                            <i class="fas fa-save"></i> 更新地点
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="list-section">
+                <h2>已添加的地点</h2>
+                <div id="siteListContent"></div>
+            </div>
+        </div>
+
+        <div class="download-section">
+            <button onclick="downloadSiteJSON()" class="button download-button">
+                <i class="fas fa-download"></i> 下载JSON数据
+            </button>
+        </div>
     </div>
 
-    <!-- 校园地方坐标表单 -->
-    <div class="content">
-        <h2>生成校园地方坐标数据</h2>
-        <form id="siteForm">
-            <div class="form-group">
-                <label for="siteName">名称:</label>
-                <input type="text" id="siteName" name="siteName" required>
-            </div>
+    <script>
+        const siteData = [];
+        let editingSiteId = null;
 
-            <div class="form-group">
-                <label for="siteAliases">别名:</label>
-                <input type="text" id="siteAliases" name="siteAliases" required>
-            </div>
-
-            <div class="form-group">
-                <label for="siteDesc">描述:</label>
-                <textarea id="siteDesc" name="siteDesc" required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="siteImg">默认图片URL:</label>
-                <input type="text" id="siteImg" name="siteImg" required>
-            </div>
-
-            <div class="form-group">
-                <label for="siteImages">轮播图图片URL:</label>
-                <input type="text" id="siteImageInput" name="siteImageInput">
-                <button type="button" class="button" onclick="addImage()">添加轮播图</button>
-                <ul id="imageList" class="image-list"></ul>
-            </div>
-
-            <div class="form-group">
-                <label for="siteLatitude">纬度:</label>
-                <input type="number" id="siteLatitude" name="siteLatitude" step="0.000001" required>
-            </div>
-
-            <div class="form-group">
-                <label for="siteLongitude">经度:</label>
-                <input type="number" id="siteLongitude" name="siteLongitude" step="0.000001" required>
-            </div>
-
-            <button type="button" class="button" onclick="addSite()">添加地点</button>
-        </form>
-    </div>
-
-    <!-- 生成的校园地方坐标列表 -->
-    <div id="siteList" class="site-list">
-        <h3>已添加的地点:</h3>
-        <ul id="siteListContent"></ul>
-    </div>
-
-    <button onclick="downloadSiteJSON()" class="button">下载JSON</button>
-</div>
-
-<script>
-    const siteData = [];
-
-    // 添加轮播图图片
-    function addImage() {
-        const imageInput = document.getElementById('siteImageInput');
-        const imageUrl = imageInput.value.trim();
-        if (imageUrl) {
-            const imageList = document.getElementById('imageList');
-            const listItem = document.createElement('li');
-            listItem.textContent = imageUrl;
-            imageList.appendChild(listItem);
-            imageInput.value = '';  // 清空输入框
+        // 加载JSON文件
+        function loadJSONFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const jsonData = JSON.parse(e.target.result);
+                        siteData.length = 0; // 清空现有数据
+                        jsonData.forEach(site => siteData.push(site));
+                        displaySites();
+                    } catch (error) {
+                        alert('文件格式错误，请上传有效的JSON文件');
+                    }
+                };
+                reader.readAsText(file);
+            }
         }
-    }
 
-    // 添加校园地方坐标
-    function addSite() {
-        const siteName = document.getElementById('siteName').value;
-        const siteAliases = document.getElementById('siteAliases').value;
-        const siteDesc = document.getElementById('siteDesc').value;
-        const siteImg = document.getElementById('siteImg').value;
-        const siteImages = Array.from(document.getElementById('imageList').children).map(li => li.textContent);
-        const siteLatitude = parseFloat(document.getElementById('siteLatitude').value);
-        const siteLongitude = parseFloat(document.getElementById('siteLongitude').value);
-
-        const site = {
-            id: siteData.length + 1,
-            name: siteName,
-            aliases: siteAliases,
-            img: siteImg,
-            images: siteImages,
-            desc: siteDesc,
-            latitude: siteLatitude,
-            longitude: siteLongitude
-        };
-
-        siteData.push(site);
-        displaySites();
-        resetForm();
-    }
-
-    // 显示已添加的校园地方坐标
-    function displaySites() {
-        const siteListContent = document.getElementById('siteListContent');
-        siteListContent.innerHTML = '';
-        siteData.forEach((site) => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('site-item');
-            listItem.innerHTML = `
-                    <img src="${site.img}" alt="${site.name}">
-                    <strong>名称:</strong> ${site.name} <br>
-                    <strong>别名:</strong> ${site.aliases} <br>
-                    <strong>描述:</strong> ${site.desc} <br>
-                    <strong>纬度:</strong> ${site.latitude} <br>
-                    <strong>经度:</strong> ${site.longitude} <br>
-                    <strong>轮播图:</strong> ${site.images.join(', ')} <br>
+        // 添加轮播图图片
+        function addImage() {
+            const imageInput = document.getElementById('siteImageInput');
+            const imageUrl = imageInput.value.trim();
+            if (imageUrl) {
+                const imageList = document.getElementById('imageList');
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    ${imageUrl}
+                    <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: var(--secondary-color); cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
                 `;
-            siteListContent.appendChild(listItem);
-        });
-    }
+                imageList.appendChild(listItem);
+                imageInput.value = '';  // 清空输入框
+            }
+        }
 
-    // 重置表单
-    function resetForm() {
-        document.getElementById('siteName').value = '';
-        document.getElementById('siteAliases').value = '';
-        document.getElementById('siteDesc').value = '';
-        document.getElementById('siteImg').value = '';
-        document.getElementById('siteImageInput').value = '';
-        document.getElementById('siteLatitude').value = '';
-        document.getElementById('siteLongitude').value = '';
-        document.getElementById('imageList').innerHTML = '';  // 清空轮播图列表
-    }
+        // 添加校园地方坐标
+        function addSite() {
+            const siteName = document.getElementById('siteName').value;
+            const siteAliases = document.getElementById('siteAliases').value;
+            const siteDesc = document.getElementById('siteDesc').value;
+            const siteImg = document.getElementById('siteImg').value;
+            const siteImages = Array.from(document.getElementById('imageList').children).map(li => li.textContent.trim());
+            const siteLatitude = parseFloat(document.getElementById('siteLatitude').value);
+            const siteLongitude = parseFloat(document.getElementById('siteLongitude').value);
 
-    // 下载JSON
-    function downloadSiteJSON() {
-        const jsonData = JSON.stringify(siteData, null, 2);
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'site_data.json';
-        link.click();
-        URL.revokeObjectURL(url);
-    }
-</script>
+            const site = {
+                id: siteData.length + 1,
+                name: siteName,
+                aliases: siteAliases,
+                img: siteImg,
+                images: siteImages,
+                desc: siteDesc,
+                latitude: siteLatitude,
+                longitude: siteLongitude
+            };
 
+            siteData.push(site);
+            displaySites();
+            resetForm();
+        }
+
+        // 更新校园地方坐标
+        function updateSite() {
+            if (editingSiteId === null) return;
+
+            const siteName = document.getElementById('siteName').value;
+            const siteAliases = document.getElementById('siteAliases').value;
+            const siteDesc = document.getElementById('siteDesc').value;
+            const siteImg = document.getElementById('siteImg').value;
+            const siteImages = Array.from(document.getElementById('imageList').children).map(li => li.textContent.trim());
+            const siteLatitude = parseFloat(document.getElementById('siteLatitude').value);
+            const siteLongitude = parseFloat(document.getElementById('siteLongitude').value);
+
+            const siteIndex = siteData.findIndex(site => site.id === editingSiteId);
+            if (siteIndex !== -1) {
+                siteData[siteIndex] = {
+                    id: editingSiteId,
+                    name: siteName,
+                    aliases: siteAliases,
+                    img: siteImg,
+                    images: siteImages,
+                    desc: siteDesc,
+                    latitude: siteLatitude,
+                    longitude: siteLongitude
+                };
+            }
+
+            displaySites();
+            resetForm();
+            editingSiteId = null;
+            document.getElementById('updateButton').style.display = 'none';
+        }
+
+        // 编辑校园地方坐标
+        function editSite(siteId) {
+            const site = siteData.find(s => s.id === siteId);
+            if (site) {
+                document.getElementById('siteName').value = site.name;
+                document.getElementById('siteAliases').value = site.aliases;
+                document.getElementById('siteDesc').value = site.desc;
+                document.getElementById('siteImg').value = site.img;
+                document.getElementById('siteLatitude').value = site.latitude;
+                document.getElementById('siteLongitude').value = site.longitude;
+                
+                const imageList = document.getElementById('imageList');
+                imageList.innerHTML = '';
+                site.images.forEach(imageUrl => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        ${imageUrl}
+                        <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: var(--secondary-color); cursor: pointer;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    imageList.appendChild(listItem);
+                });
+
+                editingSiteId = siteId;
+                document.getElementById('updateButton').style.display = 'inline-block';
+            }
+        }
+
+        // 删除校园地方坐标
+        function deleteSite(siteId) {
+            if (confirm('确定要删除这个地点吗？')) {
+                const siteIndex = siteData.findIndex(site => site.id === siteId);
+                if (siteIndex !== -1) {
+                    siteData.splice(siteIndex, 1);
+                    displaySites();
+                }
+            }
+        }
+
+        // 显示已添加的校园地方坐标
+        function displaySites() {
+            const siteListContent = document.getElementById('siteListContent');
+            siteListContent.innerHTML = '';
+            siteData.forEach((site) => {
+                const listItem = document.createElement('div');
+                listItem.classList.add('site-item');
+                listItem.innerHTML = `
+                    <img src="${site.img}" alt="${site.name}" onerror="this.src='https://via.placeholder.com/100'">
+                    <h3>${site.name}</h3>
+                    <p><strong>别名:</strong> ${site.aliases}</p>
+                    <p><strong>描述:</strong> ${site.desc}</p>
+                    <p><strong>纬度:</strong> ${site.latitude}</p>
+                    <p><strong>经度:</strong> ${site.longitude}</p>
+                    <p><strong>轮播图:</strong></p>
+                    <ul class="image-list">
+                        ${site.images.map(img => `<li>${img}</li>`).join('')}
+                    </ul>
+                    <div class="actions">
+                        <button onclick="editSite(${site.id})" class="button">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button onclick="deleteSite(${site.id})" class="button secondary">
+                            <i class="fas fa-trash"></i> 删除
+                        </button>
+                    </div>
+                `;
+                siteListContent.appendChild(listItem);
+            });
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('siteName').value = '';
+            document.getElementById('siteAliases').value = '';
+            document.getElementById('siteDesc').value = '';
+            document.getElementById('siteImg').value = '';
+            document.getElementById('siteImageInput').value = '';
+            document.getElementById('siteLatitude').value = '';
+            document.getElementById('siteLongitude').value = '';
+            document.getElementById('imageList').innerHTML = '';
+            document.getElementById('updateButton').style.display = 'none';
+        }
+
+        // 下载JSON
+        function downloadSiteJSON() {
+            const jsonData = JSON.stringify(siteData, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'site_data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
 </body>
 </html>

@@ -3,173 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>科师校园导航数据生成系统 - AI问题生成</title>
+    <title>科师校园导航数据生成系统 - AI问答管理</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
         .container {
-            width: 80%;
+            max-width: 1200px;
             margin: 0 auto;
-        }
-        .header {
-            background-color: #007bff;
-            color: white;
-            text-align: center;
             padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .back-button {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 8px 16px;
+            border: 2px solid white;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background-color: white;
+            color: var(--primary-color);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
             margin-bottom: 40px;
         }
-        .nav {
-            display: flex;
-            justify-content: center;
-            background-color: #007bff;
-            padding: 10px;
+
+        @media (max-width: 992px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
         }
-        .nav a {
-            margin: 0 20px;
-            color: white;
-            font-size: 18px;
-            text-decoration: none;
+
+        .form-section, .list-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
         }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .content {
-            padding: 20px;
-        }
+
         .form-group {
             margin-bottom: 20px;
         }
+
         label {
-            font-size: 16px;
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
         }
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+
         textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: var(--transition);
+            min-height: 100px;
             resize: vertical;
         }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
         .button {
-            background-color: #007bff;
+            background-color: var(--primary-color);
             color: white;
             padding: 12px 24px;
-            font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: var(--transition);
         }
+
         .button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
-        .qa-list {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        .button.secondary {
+            background-color: var(--secondary-color);
         }
+
+        .button.secondary:hover {
+            background-color: #5a6268;
+        }
+
         .qa-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
         }
-        .qa-item:last-child {
-            border-bottom: none;
+
+        .qa-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .qa-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .qa-item p {
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+        }
+
+        .qa-item .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .download-button {
+            background-color: #28a745;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+
+        .download-button:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .qa-item .actions {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <header>
+        <div class="header-content">
+            <h1>AI问答管理</h1>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+        </div>
+    </header>
 
-<div class="container">
-    <!-- AI问题页面头部 -->
-    <div class="header">
-        <h1>科师校园导航数据生成系统</h1>
-        <a href="index.html" style="color: white; text-decoration: none; font-size: 18px;">返回主页</a>
-    </div>
+    <div class="container">
+        <div class="content">
+            <div class="form-section">
+                <h2>添加/编辑问答</h2>
+                <div class="form-group">
+                    <label for="jsonFile">上传JSON文件:</label>
+                    <input type="file" id="jsonFile" accept=".json" onchange="loadJSONFile(event)">
+                </div>
+                <form id="qaForm">
+                    <div class="form-group">
+                        <label for="question">问题:</label>
+                        <textarea id="question" name="question" required></textarea>
+                    </div>
 
-    <!-- AI问题表单 -->
-    <div class="content">
-        <h2>生成AI问题</h2>
-        <form id="qaForm">
-            <div class="form-group">
-                <label for="question">问题:</label>
-                <input type="text" id="question" name="q" required>
+                    <div class="form-group">
+                        <label for="answer">答案:</label>
+                        <textarea id="answer" name="answer" required></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="button" onclick="addQA()">
+                            <i class="fas fa-plus"></i> 添加问答
+                        </button>
+                        <button type="button" class="button" onclick="updateQA()" style="display: none;" id="updateButton">
+                            <i class="fas fa-save"></i> 更新问答
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="answer">回答:</label>
-                <textarea id="answer" name="a" required></textarea>
+
+            <div class="list-section">
+                <h2>已添加的问答</h2>
+                <div id="qaListContent"></div>
             </div>
-            <button type="button" class="button" onclick="addQA()">添加问题</button>
-        </form>
+        </div>
+
+        <div class="download-section">
+            <button onclick="downloadQAJSON()" class="button download-button">
+                <i class="fas fa-download"></i> 下载JSON数据
+            </button>
+        </div>
     </div>
 
-    <!-- 生成的AI问题列表 -->
-    <div id="qaList" class="qa-list">
-        <h3>已添加的AI问题:</h3>
-        <ul id="qaListContent"></ul>
-    </div>
+    <script>
+        const qaData = [];
+        let editingQAId = null;
 
-    <button onclick="downloadJSON()" class="button">下载JSON</button>
-</div>
+        // 加载JSON文件
+        function loadJSONFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const jsonData = JSON.parse(e.target.result);
+                        qaData.length = 0; // 清空现有数据
+                        jsonData.forEach(qa => qaData.push(qa));
+                        displayQA();
+                    } catch (error) {
+                        alert('文件格式错误，请上传有效的JSON文件');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
 
-<script>
-    const qaData = [];
+        // 添加问答
+        function addQA() {
+            const question = document.getElementById('question').value;
+            const answer = document.getElementById('answer').value;
 
-    // 添加AI问题
-    function addQA() {
-        const question = document.getElementById('question').value;
-        const answer = document.getElementById('answer').value;
+            const qa = {
+                id: qaData.length + 1,
+                question: question,
+                answer: answer
+            };
 
-        const qa = {
-            q: question,
-            a: answer
-        };
+            qaData.push(qa);
+            displayQA();
+            resetForm();
+        }
 
-        qaData.push(qa);
-        displayQA();
-        resetForm();
-    }
+        // 更新问答
+        function updateQA() {
+            if (editingQAId === null) return;
 
-    // 显示已添加的AI问题
-    function displayQA() {
-        const qaListContent = document.getElementById('qaListContent');
-        qaListContent.innerHTML = '';
-        qaData.forEach((qa, index) => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('qa-item');
-            listItem.innerHTML = `
-                    <strong>问题:</strong> ${qa.q} <br>
-                    <strong>回答:</strong> ${qa.a} <br>
+            const question = document.getElementById('question').value;
+            const answer = document.getElementById('answer').value;
+
+            const qaIndex = qaData.findIndex(qa => qa.id === editingQAId);
+            if (qaIndex !== -1) {
+                qaData[qaIndex] = {
+                    id: editingQAId,
+                    question: question,
+                    answer: answer
+                };
+            }
+
+            displayQA();
+            resetForm();
+            editingQAId = null;
+            document.getElementById('updateButton').style.display = 'none';
+        }
+
+        // 编辑问答
+        function editQA(qaId) {
+            const qa = qaData.find(q => q.id === qaId);
+            if (qa) {
+                document.getElementById('question').value = qa.question;
+                document.getElementById('answer').value = qa.answer;
+                editingQAId = qaId;
+                document.getElementById('updateButton').style.display = 'inline-block';
+            }
+        }
+
+        // 删除问答
+        function deleteQA(qaId) {
+            if (confirm('确定要删除这个问答吗？')) {
+                const qaIndex = qaData.findIndex(qa => qa.id === qaId);
+                if (qaIndex !== -1) {
+                    qaData.splice(qaIndex, 1);
+                    displayQA();
+                }
+            }
+        }
+
+        // 显示已添加的问答
+        function displayQA() {
+            const qaListContent = document.getElementById('qaListContent');
+            qaListContent.innerHTML = '';
+            qaData.forEach((qa) => {
+                const listItem = document.createElement('div');
+                listItem.classList.add('qa-item');
+                listItem.innerHTML = `
+                    <h3>问题 ${qa.id}</h3>
+                    <p><strong>问题:</strong> ${qa.question}</p>
+                    <p><strong>答案:</strong> ${qa.answer}</p>
+                    <div class="actions">
+                        <button onclick="editQA(${qa.id})" class="button">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button onclick="deleteQA(${qa.id})" class="button secondary">
+                            <i class="fas fa-trash"></i> 删除
+                        </button>
+                    </div>
                 `;
-            qaListContent.appendChild(listItem);
-        });
-    }
+                qaListContent.appendChild(listItem);
+            });
+        }
 
-    // 重置表单
-    function resetForm() {
-        document.getElementById('question').value = '';
-        document.getElementById('answer').value = '';
-    }
+        // 重置表单
+        function resetForm() {
+            document.getElementById('question').value = '';
+            document.getElementById('answer').value = '';
+            document.getElementById('updateButton').style.display = 'none';
+        }
 
-    // 下载JSON
-    function downloadJSON() {
-        const jsonData = JSON.stringify({ qa_data: qaData }, null, 2);
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'qa_data.json';
-        link.click();
-        URL.revokeObjectURL(url);
-    }
-</script>
-
+        // 下载JSON
+        function downloadQAJSON() {
+            const jsonData = JSON.stringify(qaData, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'qa_data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
 </body>
 </html>

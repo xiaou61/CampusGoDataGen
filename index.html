@@ -5,82 +5,217 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>科师校园导航数据生成系统</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
         .container {
-            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header-content {
+            max-width: 800px;
             margin: 0 auto;
         }
-        .header {
-            background-color: #007bff;
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .feature-description {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background-color: #343a40;
             color: white;
             text-align: center;
             padding: 20px;
-            margin-bottom: 40px;
+            margin-top: 40px;
         }
-        .nav {
-            display: flex;
-            justify-content: center;
-            background-color: #007bff;
-            padding: 10px;
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .nav a {
-            margin: 0 20px;
-            color: white;
-            font-size: 18px;
-            text-decoration: none;
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .main-content {
-            text-align: center;
-            padding: 40px 0;
-        }
-        .button-link {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 24px;
-            font-size: 18px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            display: inline-block;
-        }
-        .button-link:hover {
-            background-color: #218838;
+
+        @media (max-width: 768px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <header>
+        <div class="header-content">
+            <h1>科师校园导航数据生成系统</h1>
+            <p class="subtitle">一站式校园导航数据管理平台，轻松生成和管理校园导航所需的各种数据</p>
+        </div>
+    </header>
 
-<div class="container">
-    <!-- 主页头部 -->
-    <div class="header">
-        <h1>科师校园导航数据生成系统</h1>
-        <p>欢迎使用校园数据生成工具，点击下方链接进入相关功能页面。</p>
+    <div class="container">
+        <div class="features">
+            <div class="feature-card" onclick="window.location.href='site.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h2 class="feature-title">校园地点管理</h2>
+                <p class="feature-description">添加、编辑和管理校园内的各个地点信息，包括名称、描述、图片和坐标等。</p>
+                <a href="site.html" class="cta-button">开始管理</a>
+            </div>
+
+            <div class="feature-card" onclick="window.location.href='qa.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h2 class="feature-title">AI问答管理</h2>
+                <p class="feature-description">创建和管理智能问答系统所需的问题和答案，提升用户体验。</p>
+                <a href="qa.html" class="cta-button">开始管理</a>
+            </div>
+
+            <div class="feature-card" onclick="window.location.href='guide.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h2 class="feature-title">校园指南管理</h2>
+                <p class="feature-description">编写和管理校园指南内容，包括校园介绍、规章制度等重要信息。</p>
+                <a href="guide.html" class="cta-button">开始管理</a>
+            </div>
+        </div>
     </div>
 
-    <!-- 主页导航栏 -->
-    <div class="nav">
-        <a href="index.html">主页</a>
-        <a href="guide.html">校园指南生成</a>
-        <a href="qa.html">AI问题生成</a>
-        <a href="site.html">经纬度</a>
-    </div>
+    <footer>
+        <p>此网站用于科师校园导航小程序数据生成</p>
+        <p>© 2025 科师校园导航数据生成系统 - 版权所有</p>
+    </footer>
 
-    <!-- 主页内容 -->
-    <div class="main-content">
-        <h2>选择功能来生成相关的数据文件</h2>
-        <a href="guide.html" class="button-link">校园指南数据生成</a>
-        <a href="qa.html" class="button-link">AI问题数据生成</a>
-        <a href="site.html" class="button-link">地点经纬度</a>
-    </div>
-</div>
-
+    <script>
+        // 添加卡片点击效果
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-5px)';
+                }, 100);
+            });
+        });
+    </script>
 </body>
 </html>
