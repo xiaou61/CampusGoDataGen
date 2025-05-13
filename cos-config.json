@@ -1,6 +1,6 @@
 {
-    "Bucket": "campusgo-1314393256",
-    "Region": "ap-beijing",
-    "SecretId": "AKIDAPkbKwNbbOyMabP2TggS1MXVFm5C5lJe",
-    "SecretKey": "DD0Zu2xy30zlNo11nQr594nIeqqoaCdr"
+    "Bucket": "你的bucket存储桶名称",
+    "Region": "你的bucket区域",
+    "SecretId": "你的secretId",
+    "SecretKey": "你的secretKey"
 } 
