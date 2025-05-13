@@ -6,11 +6,19 @@
     <title>科师校园导航数据生成系统 - 校园指南管理</title>
     <style>
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --background-color: #f8f9fa;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --primary-color: #2563eb;
+            --secondary-color: #52c41a;
+            --danger-color: #ff4d4f;
+            --background-color: #ffffff;
+            --card-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #1d4ed8;
+            --transition-base: all 0.3s ease;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --text-color: #1f2937;
+            --text-secondary: #4b5563;
+            --border-radius: 8px;
         }
 
         * {
@@ -20,73 +28,131 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: var(--background-color);
-            color: #333;
+            color: var(--text-color);
             line-height: 1.6;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* 隐藏滚动条但保持可滚动 */
+        .form-section::-webkit-scrollbar,
+        .list-section::-webkit-scrollbar {
+            display: none;
+        }
+
+        .form-section,
+        .list-section {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 100%;
+            height: calc(100vh - 88px);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            background-color: var(--primary-color);
             color: white;
-            padding: 40px 0;
-            text-align: center;
-            margin-bottom: 40px;
+            padding: 24px 0;
+            margin-bottom: 0;
             box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            height: 88px;
+            box-sizing: border-box;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            opacity: 0.1;
         }
 
         .header-content {
-            max-width: 800px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
             font-size: 2rem;
             margin: 0;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .back-button {
             color: white;
             text-decoration: none;
-            font-size: 1.1rem;
-            padding: 8px 16px;
-            border: 2px solid white;
-            border-radius: 20px;
-            transition: var(--transition);
+            font-size: 1rem;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: var(--border-radius);
+            transition: var(--transition-base);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
         }
 
         .back-button:hover {
-            background-color: white;
-            color: var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
         }
 
         .content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
+            grid-template-columns: 350px 1fr;
+            gap: 0;
+            height: 100%;
+            overflow: hidden;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        @media (max-width: 992px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .form-section, .list-section {
+        .form-section {
             background: white;
-            border-radius: 10px;
-            padding: 30px;
+            padding: 24px;
             box-shadow: var(--card-shadow);
+            height: 100%;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            border-radius: var(--border-radius);
+        }
+
+        .list-section {
+            background: white;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            height: 100%;
+            overflow-y: auto;
+            margin-left: 24px;
+            border-radius: var(--border-radius);
         }
 
         .form-group {
@@ -95,18 +161,20 @@
 
         label {
             display: block;
-            font-size: 1rem;
+            font-size: 0.9rem;
             margin-bottom: 8px;
-            color: var(--secondary-color);
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
         input, textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: var(--transition);
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            transition: var(--transition-base);
+            background: #fafafa;
         }
 
         textarea {
@@ -117,24 +185,33 @@
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+            background: white;
         }
 
         .button {
             background-color: var(--primary-color);
             color: white;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: var(--transition);
+            font-size: 0.9rem;
+            transition: var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
         }
 
         .button:hover {
-            background-color: #0056b3;
+            background-color: var(--hover-color);
             transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+        }
+
+        .button:active {
+            transform: translateY(0);
         }
 
         .button.secondary {
@@ -142,50 +219,101 @@
         }
 
         .button.secondary:hover {
-            background-color: #5a6268;
+            background-color: #73d13d;
+            box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);
+        }
+
+        .button.danger {
+            background-color: var(--danger-color);
+        }
+
+        .button.danger:hover {
+            background-color: #ff7875;
+            box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);
         }
 
         .guide-item {
             background: white;
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--card-shadow);
-            transition: var(--transition);
+            transition: var(--transition-base);
+            border: 1px solid var(--border-color);
         }
 
         .guide-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+            border-color: #e6f7ff;
         }
 
         .guide-item h3 {
             color: var(--primary-color);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
         .guide-item p {
             margin-bottom: 8px;
-            color: var(--secondary-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         .guide-item .actions {
-            margin-top: 15px;
+            margin-top: 16px;
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .image-list {
             list-style: none;
             padding: 0;
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .image-list li {
-            padding: 8px;
-            background: #f8f9fa;
+            padding: 8px 12px;
+            background: #fafafa;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            word-break: break-all;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            transition: var(--transition-base);
+        }
+
+        .image-list li:hover {
+            background: #f0f7ff;
+            border-color: var(--primary-color);
+            transform: translateX(4px);
+        }
+
+        .image-list li button {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 4px 8px;
             border-radius: 4px;
-            margin-bottom: 5px;
+            transition: var(--transition-base);
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .image-list li button:hover {
+            color: var(--danger-color);
+            background: rgba(255, 77, 79, 0.1);
+        }
+
+        .image-list li .url-text {
+            flex: 1;
+            color: var(--text-secondary);
             word-break: break-all;
         }
 
@@ -193,56 +321,243 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .keyword {
-            background: #e9ecef;
+            background: #f5f5f5;
             padding: 4px 8px;
-            border-radius: 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition-base);
+        }
+
+        .keyword:hover {
+            background: #f0f7ff;
+            border-color: var(--primary-color);
+        }
+
+        .keyword button {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 2px;
+            font-size: 0.8rem;
+            transition: var(--transition-base);
+        }
+
+        .keyword button:hover {
+            color: var(--danger-color);
+        }
+
+        .error-message {
+            background-color: #fff2f0;
+            border: 1px solid #ffccc7;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin: 16px 0;
+            color: var(--danger-color);
             font-size: 0.9rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .error-message.success {
+            background-color: #f6ffed;
+            border-color: #b7eb8f;
             color: var(--secondary-color);
         }
 
-        .download-section {
-            text-align: center;
-            margin-top: 40px;
+        .error-message.show {
+            display: block;
+        }
+
+        .error-message pre {
+            background: #fafafa;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            margin-top: 12px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            border: 1px solid #ffccc7;
+        }
+
+        .error-message.success pre {
+            border-color: #b7eb8f;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: #fafafa;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--primary-color);
+            background: #f0f7ff;
+        }
+
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition-base);
+            border: 2px solid transparent;
+        }
+
+        .image-preview img:hover {
+            transform: scale(1.05);
+            border-color: var(--primary-color);
+        }
+
+        /* 添加图片上传相关样式 */
+        .upload-progress {
+            width: 100%;
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .upload-status {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            display: none;
+        }
+
+        .upload-status.success {
+            color: var(--secondary-color);
+        }
+
+        .upload-status.error {
+            color: var(--danger-color);
         }
 
         .download-button {
-            background-color: #28a745;
-            padding: 15px 30px;
-            font-size: 1.1rem;
+            background-color: var(--secondary-color);
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .download-button:hover {
-            background-color: #218838;
+            background-color: #73d13d;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);
         }
 
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 20px;
+        @media (max-width: 992px) {
+            .content {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow: visible;
+                padding: 16px;
             }
 
-            .guide-item .actions {
-                flex-direction: column;
+            .form-section {
+                position: relative;
+                height: auto;
+                overflow: visible;
             }
 
-            .button {
-                width: 100%;
+            .list-section {
+                margin-left: 0;
+                margin-top: 24px;
+                height: auto;
+            }
+
+            .container {
+                height: auto;
+                overflow: visible;
+            }
+
+            body {
+                overflow: auto;
             }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- 添加腾讯云 COS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/cos-js-sdk-v5/dist/cos-js-sdk-v5.min.js"></script>
 </head>
 <body>
     <header>
         <div class="header-content">
             <h1>校园指南管理</h1>
-            <a href="index.html" class="back-button">
-                <i class="fas fa-arrow-left"></i> 返回首页
-            </a>
+            <div style="display: flex; gap: 12px;">
+                <button onclick="downloadGuideJSON()" class="button download-button">
+                    <i class="fas fa-download"></i> 下载JSON数据
+                </button>
+                <a href="index.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i> 返回首页
+                </a>
+            </div>
         </div>
     </header>
 
@@ -250,9 +565,16 @@
         <div class="content">
             <div class="form-section">
                 <h2>添加/编辑指南</h2>
+                <div class="error-message" id="errorMessage"></div>
                 <div class="form-group">
                     <label for="jsonFile">上传JSON文件:</label>
-                    <input type="file" id="jsonFile" accept=".json" onchange="loadJSONFile(event)">
+                    <div class="file-upload">
+                        <div class="file-upload-label">
+                            <i class="fas fa-upload"></i>
+                            <span>选择文件</span>
+                        </div>
+                        <input type="file" id="jsonFile" accept=".json" onchange="loadJSONFile(event)">
+                    </div>
                 </div>
                 <form id="guideForm">
                     <div class="form-group">
@@ -267,18 +589,30 @@
 
                     <div class="form-group">
                         <label for="guideImages">图片URL:</label>
-                        <div style="display: flex; gap: 10px;">
+                        <div class="file-upload">
+                            <div class="file-upload-label">
+                                <i class="fas fa-upload"></i>
+                                <span>选择文件或输入URL</span>
+                            </div>
+                            <input type="file" id="guideImageFile" accept="image/*" onchange="handleGuideImageUpload(event)">
+                        </div>
+                        <div class="upload-progress" id="guideImageProgress">
+                            <div class="upload-progress-bar"></div>
+                        </div>
+                        <div class="upload-status" id="guideImageStatus"></div>
+                        <div style="display: flex; gap: 8px; height: 55px; margin-top: 8px;">
                             <input type="text" id="guideImageInput" name="guideImageInput">
                             <button type="button" class="button" onclick="addImage()">
                                 <i class="fas fa-plus"></i> 添加
                             </button>
                         </div>
                         <ul id="imageList" class="image-list"></ul>
+                        <div class="image-preview" id="imagePreview"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="guideKeywords">关键词:</label>
-                        <div style="display: flex; gap: 10px;">
+                        <div style="display: flex; gap: 8px;">
                             <input type="text" id="guideKeywordInput" name="guideKeywordInput">
                             <button type="button" class="button" onclick="addKeyword()">
                                 <i class="fas fa-plus"></i> 添加
@@ -287,7 +621,7 @@
                         <div id="keywordList" class="keyword-list"></div>
                     </div>
 
-                    <div style="display: flex; gap: 10px;">
+                    <div style="display: flex; gap: 8px;">
                         <button type="button" class="button" onclick="addGuide()">
                             <i class="fas fa-plus"></i> 添加指南
                         </button>
@@ -303,35 +637,187 @@
                 <div id="guideListContent"></div>
             </div>
         </div>
-
-        <div class="download-section">
-            <button onclick="downloadGuideJSON()" class="button download-button">
-                <i class="fas fa-download"></i> 下载JSON数据
-            </button>
-        </div>
     </div>
 
     <script>
         const guides = [];
         let editingGuideId = null;
+        let cos = null;
+        let cosConfig = null;
+
+        // 加载 COS 配置
+        function loadCOSConfig() {
+            return new Promise((resolve, reject) => {
+                fetch('cos-config.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('网络响应不正常');
+                        }
+                        return response.json();
+                    })
+                    .then(config => {
+                        cosConfig = config;
+                        initCOS();
+                        resolve();
+                    })
+                    .catch(error => {
+                        console.error('加载 COS 配置失败:', error);
+                        showError('加载 COS 配置失败', error.message);
+                        reject(error);
+                    });
+            });
+        }
+
+        // 初始化 COS 实例
+        function initCOS() {
+            if (!cosConfig) return;
+            
+            cos = new COS({
+                SecretId: cosConfig.SecretId,
+                SecretKey: cosConfig.SecretKey
+            });
+        }
+
+        // 重置所有数据
+        function resetAll() {
+            guides.length = 0;
+            editingGuideId = null;
+            cos = null;
+            cosConfig = null;
+            resetForm();
+            displayGuides();
+        }
+
+        // 重新加载配置
+        async function reloadConfig() {
+            try {
+                resetAll();
+                await loadCOSConfig();
+                showError('配置重新加载成功', null, 'success');
+            } catch (error) {
+                showError('配置重新加载失败', error.message);
+            }
+        }
+
+        // 显示错误信息
+        function showError(message, details = null, type = 'error') {
+            const errorDiv = document.getElementById('errorMessage');
+            let errorContent = `<strong>${type === 'error' ? '错误' : '提示'}：</strong> ${message}`;
+            
+            if (details) {
+                errorContent += `<pre>${details}</pre>`;
+            }
+            
+            errorDiv.innerHTML = errorContent;
+            errorDiv.className = `error-message show ${type}`;
+            
+            // 15秒后自动隐藏错误信息
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 15000);
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCOSConfig().catch(error => {
+                console.error('初始化失败:', error);
+            });
+        });
 
         // 加载JSON文件
         function loadJSONFile(event) {
             const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const jsonData = JSON.parse(e.target.result);
-                        guides.length = 0; // 清空现有数据
-                        jsonData.forEach(guide => guides.push(guide));
-                        displayGuides();
-                    } catch (error) {
-                        alert('文件格式错误，请上传有效的JSON文件');
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+                    
+                    // 验证JSON数据结构
+                    if (!Array.isArray(jsonData)) {
+                        throw new Error('JSON数据必须是数组格式');
                     }
-                };
-                reader.readAsText(file);
-            }
+
+                    // 验证每个指南的数据结构
+                    jsonData.forEach((guide, index) => {
+                        if (!guide.id || !guide.title || !guide.content || !Array.isArray(guide.images) || !Array.isArray(guide.keywords)) {
+                            throw new Error(`第${index + 1}个指南数据格式错误：缺少必要字段(id, title, content, images, keywords)`);
+                        }
+                    });
+
+                    guides.length = 0; // 清空现有数据
+                    jsonData.forEach(guide => guides.push(guide));
+                    displayGuides();
+                    showError('JSON文件加载成功', null, 'success');
+                } catch (error) {
+                    showError('JSON文件格式错误', error.message);
+                    console.error('JSON解析错误:', error);
+                }
+            };
+            reader.onerror = function() {
+                showError('文件读取错误', '无法读取文件，请确保文件未被损坏且具有正确的访问权限');
+            };
+            reader.readAsText(file);
+
+            // 重置文件输入框，确保下次选择相同文件时也能触发事件
+            event.target.value = '';
+        }
+
+        // 处理指南图片上传
+        function handleGuideImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const progressBar = document.getElementById('guideImageProgress');
+            const progressBarInner = progressBar.querySelector('.upload-progress-bar');
+            const status = document.getElementById('guideImageStatus');
+
+            progressBar.style.display = 'block';
+            status.style.display = 'block';
+            status.textContent = '上传中...';
+            status.className = 'upload-status';
+
+            const key = `images/${Date.now()}_${file.name}`;
+            
+            cos.putObject({
+                Bucket: cosConfig.Bucket,
+                Region: cosConfig.Region,
+                Key: key,
+                Body: file,
+                onProgress: function(progressData) {
+                    const percent = Math.floor(progressData.percent * 100);
+                    progressBarInner.style.width = percent + '%';
+                }
+            }, function(err, data) {
+                if (err) {
+                    status.textContent = '上传失败：' + err.message;
+                    status.className = 'upload-status error';
+                } else {
+                    // 生成带签名的URL
+                    cos.getObjectUrl({
+                        Bucket: cosConfig.Bucket,
+                        Region: cosConfig.Region,
+                        Key: key,
+                        Expires: 31536000, // 签名有效期一年
+                        Sign: true
+                    }, function(err, data) {
+                        if (err) {
+                            status.textContent = '获取URL失败：' + err.message;
+                            status.className = 'upload-status error';
+                        } else {
+                            document.getElementById('guideImageInput').value = data.Url;
+                            status.textContent = '上传成功';
+                            status.className = 'upload-status success';
+                            addImage();
+                        }
+                    });
+                }
+                setTimeout(() => {
+                    progressBar.style.display = 'none';
+                    status.style.display = 'none';
+                }, 3000);
+            });
         }
 
         // 添加图片
@@ -341,14 +827,33 @@
             if (imageUrl) {
                 const imageList = document.getElementById('imageList');
                 const listItem = document.createElement('li');
+                // 从URL中提取图片key
+                const key = imageUrl.split('/').pop();
                 listItem.innerHTML = `
-                    ${imageUrl}
-                    <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: var(--secondary-color); cursor: pointer;">
+                    <span class="url-text">${imageUrl}</span>
+                    <button onclick="deleteImage(this, '${key}')" title="删除图片">
                         <i class="fas fa-times"></i>
                     </button>
                 `;
                 imageList.appendChild(listItem);
                 imageInput.value = '';  // 清空输入框
+                updateImagePreviews();
+            }
+        }
+
+        // 删除图片
+        function deleteImage(button, key) {
+            if (confirm('确定要删除这张图片吗？此操作不可恢复。')) {
+                // 从COS中删除图片
+                cos.deleteObject({
+                    Bucket: cosConfig.Bucket,
+                    Region: cosConfig.Region,
+                    Key: `images/${key}`
+                }, function(err, data) {
+                    // 无论 COS 删除是否成功，都从列表中删除
+                    button.parentElement.remove();
+                    updateImagePreviews();
+                });
             }
         }
 
@@ -362,7 +867,7 @@
                 keywordElement.classList.add('keyword');
                 keywordElement.innerHTML = `
                     ${keyword}
-                    <button onclick="this.parentElement.remove()" style="background: none; border: none; color: var(--secondary-color); cursor: pointer; margin-left: 4px;">
+                    <button onclick="this.parentElement.remove()">
                         <i class="fas fa-times"></i>
                     </button>
                 `;
@@ -371,50 +876,74 @@
             }
         }
 
-        // 添加校园指南
-        function addGuide() {
-            const title = document.getElementById('guideTitle').value;
-            const content = document.getElementById('guideContent').value;
+        // 更新图片预览
+        function updateImagePreviews() {
             const images = Array.from(document.getElementById('imageList').children).map(li => li.textContent.trim());
-            const keywords = Array.from(document.getElementById('keywordList').children).map(span => span.textContent.trim());
-
-            const guide = {
-                id: guides.length + 1,
-                title: title,
-                content: content,
-                images: images,
-                keywords: keywords
-            };
-
-            guides.push(guide);
-            displayGuides();
-            resetForm();
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.innerHTML = images.map(url => 
+                `<img src="${url}" alt="预览图" onerror="this.src='https://via.placeholder.com/100'">`
+            ).join('');
         }
 
-        // 更新校园指南
-        function updateGuide() {
-            if (editingGuideId === null) return;
+        // 添加校园指南
+        function addGuide() {
+            try {
+                const title = document.getElementById('guideTitle').value.trim();
+                const content = document.getElementById('guideContent').value.trim();
+                const images = Array.from(document.getElementById('imageList').children).map(li => li.textContent.trim());
+                const keywords = Array.from(document.getElementById('keywordList').children).map(span => span.textContent.trim());
 
-            const title = document.getElementById('guideTitle').value;
-            const content = document.getElementById('guideContent').value;
-            const images = Array.from(document.getElementById('imageList').children).map(li => li.textContent.trim());
-            const keywords = Array.from(document.getElementById('keywordList').children).map(span => span.textContent.trim());
+                if (!title) throw new Error('请输入标题');
+                if (!content) throw new Error('请输入内容');
 
-            const guideIndex = guides.findIndex(guide => guide.id === editingGuideId);
-            if (guideIndex !== -1) {
-                guides[guideIndex] = {
-                    id: editingGuideId,
+                const guide = {
+                    id: guides.length + 1,
                     title: title,
                     content: content,
                     images: images,
                     keywords: keywords
                 };
-            }
 
-            displayGuides();
-            resetForm();
-            editingGuideId = null;
-            document.getElementById('updateButton').style.display = 'none';
+                guides.push(guide);
+                displayGuides();
+                resetForm();
+            } catch (error) {
+                showError('添加指南失败', error.message);
+            }
+        }
+
+        // 更新校园指南
+        function updateGuide() {
+            try {
+                if (!editingGuideId) throw new Error('没有正在编辑的指南');
+
+                const title = document.getElementById('guideTitle').value.trim();
+                const content = document.getElementById('guideContent').value.trim();
+                const images = Array.from(document.getElementById('imageList').children).map(li => li.textContent.trim());
+                const keywords = Array.from(document.getElementById('keywordList').children).map(span => span.textContent.trim());
+
+                if (!title) throw new Error('请输入标题');
+                if (!content) throw new Error('请输入内容');
+
+                const guideIndex = guides.findIndex(guide => guide.id === editingGuideId);
+                if (guideIndex !== -1) {
+                    guides[guideIndex] = {
+                        id: editingGuideId,
+                        title: title,
+                        content: content,
+                        images: images,
+                        keywords: keywords
+                    };
+                    displayGuides();
+                    resetForm();
+                    editingGuideId = null;
+                    document.getElementById('updateButton').style.display = 'none';
+                } else {
+                    throw new Error('要更新的指南不存在');
+                }
+            } catch (error) {
+                showError('更新指南失败', error.message);
+            }
         }
 
         // 编辑校园指南
@@ -427,10 +956,11 @@
                 const imageList = document.getElementById('imageList');
                 imageList.innerHTML = '';
                 guide.images.forEach(imageUrl => {
+                    const key = imageUrl.split('/').pop();
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
-                        ${imageUrl}
-                        <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: var(--secondary-color); cursor: pointer;">
+                        <span class="url-text">${imageUrl}</span>
+                        <button onclick="deleteImage(this, '${key}')" title="删除图片">
                             <i class="fas fa-times"></i>
                         </button>
                     `;
@@ -444,7 +974,7 @@
                     keywordElement.classList.add('keyword');
                     keywordElement.innerHTML = `
                         ${keyword}
-                        <button onclick="this.parentElement.remove()" style="background: none; border: none; color: var(--secondary-color); cursor: pointer; margin-left: 4px;">
+                        <button onclick="this.parentElement.remove()">
                             <i class="fas fa-times"></i>
                         </button>
                     `;
@@ -453,14 +983,25 @@
 
                 editingGuideId = guideId;
                 document.getElementById('updateButton').style.display = 'inline-block';
+                updateImagePreviews();
             }
         }
 
         // 删除校园指南
         function deleteGuide(guideId) {
-            if (confirm('确定要删除这个指南吗？')) {
+            if (confirm('确定要删除这个指南吗？此操作不可恢复。')) {
                 const guideIndex = guides.findIndex(guide => guide.id === guideId);
                 if (guideIndex !== -1) {
+                    const guide = guides[guideIndex];
+                    // 删除所有图片
+                    guide.images.forEach(imageUrl => {
+                        const key = imageUrl.split('/').pop();
+                        cos.deleteObject({
+                            Bucket: cosConfig.Bucket,
+                            Region: cosConfig.Region,
+                            Key: `images/${key}`
+                        });
+                    });
                     guides.splice(guideIndex, 1);
                     displayGuides();
                 }
@@ -478,9 +1019,9 @@
                     <h3>${guide.title}</h3>
                     <p><strong>内容:</strong> ${guide.content}</p>
                     <p><strong>图片:</strong></p>
-                    <ul class="image-list">
-                        ${guide.images.map(img => `<li>${img}</li>`).join('')}
-                    </ul>
+                    <div class="image-preview">
+                        ${guide.images.map(img => `<img src="${img}" alt="指南图片" onerror="this.src='https://via.placeholder.com/100'">`).join('')}
+                    </div>
                     <p><strong>关键词:</strong></p>
                     <div class="keyword-list">
                         ${guide.keywords.map(keyword => `<span class="keyword">${keyword}</span>`).join('')}
@@ -489,7 +1030,7 @@
                         <button onclick="editGuide(${guide.id})" class="button">
                             <i class="fas fa-edit"></i> 编辑
                         </button>
-                        <button onclick="deleteGuide(${guide.id})" class="button secondary">
+                        <button onclick="deleteGuide(${guide.id})" class="button danger">
                             <i class="fas fa-trash"></i> 删除
                         </button>
                     </div>
@@ -507,18 +1048,27 @@
             document.getElementById('imageList').innerHTML = '';
             document.getElementById('keywordList').innerHTML = '';
             document.getElementById('updateButton').style.display = 'none';
+            updateImagePreviews();
         }
 
         // 下载JSON
         function downloadGuideJSON() {
-            const jsonData = JSON.stringify(guides, null, 2);
-            const blob = new Blob([jsonData], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'guide_data.json';
-            link.click();
-            URL.revokeObjectURL(url);
+            try {
+                if (guides.length === 0) {
+                    throw new Error('没有可下载的数据');
+                }
+
+                const jsonData = JSON.stringify(guides, null, 2);
+                const blob = new Blob([jsonData], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'guide_data.json';
+                link.click();
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                showError('下载失败', error.message);
+            }
         }
     </script>
 </body>
