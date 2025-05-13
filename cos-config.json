@@ -1,0 +1,6 @@
+{
+    "Bucket": "你的bucket存储桶名称",
+    "Region": "你的bucket区域",
+    "SecretId": "你的secretId",
+    "SecretKey": "你的secretKey"
+} 
