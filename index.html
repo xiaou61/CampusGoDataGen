@@ -6,11 +6,13 @@
     <title>科师校园导航数据生成系统</title>
     <style>
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --background-color: #f8f9fa;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --primary-color: #2563eb;
+            --text-color: #1f2937;
+            --background-color: #ffffff;
+            --card-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #1d4ed8;
+            --transition-base: all 0.3s ease;
         }
 
         * {
@@ -20,118 +22,220 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--background-color);
-            color: #333;
-            line-height: 1.6;
+            color: var(--text-color);
+            line-height: 1.5;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            background-color: var(--primary-color);
             color: white;
             padding: 60px 0;
             text-align: center;
-            margin-bottom: 40px;
-            box-shadow: var(--card-shadow);
-        }
-
-        .header-content {
-            max-width: 800px;
-            margin: 0 auto;
         }
 
         h1 {
             font-size: 2.5rem;
-            margin-bottom: 20px;
-            animation: fadeInDown 1s ease;
+            font-weight: 600;
+            margin-bottom: 16px;
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             opacity: 0.9;
-            margin-bottom: 30px;
-            animation: fadeInUp 1s ease;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
+            gap: 24px;
+            padding: 48px 0;
         }
 
         .feature-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-            text-align: center;
-            cursor: pointer;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
 
         .feature-icon {
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: var(--primary-color);
             margin-bottom: 20px;
+            transition: var(--transition-base);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+            color: var(--hover-color);
         }
 
         .feature-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--primary-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-color);
         }
 
         .feature-description {
-            color: var(--secondary-color);
-            margin-bottom: 20px;
+            color: #4b5563;
+            margin-bottom: 24px;
         }
 
         .cta-button {
             display: inline-block;
             background-color: var(--primary-color);
             color: white;
-            padding: 12px 30px;
-            border-radius: 30px;
+            padding: 10px 24px;
+            border-radius: 6px;
             text-decoration: none;
-            font-weight: bold;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
         }
 
         .cta-button:hover {
-            background-color: #0056b3;
+            background-color: var(--hover-color);
             transform: translateY(-2px);
         }
 
-        footer {
-            background-color: #343a40;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
+        .cta-button:hover::before {
+            left: 100%;
         }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+        .advantages {
+            background-color: var(--card-bg);
+            padding: 48px 0;
+        }
+
+        .advantages-title {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            color: var(--text-color);
+        }
+
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .advantage-item {
+            text-align: center;
+            padding: 24px;
+            transition: var(--transition-base);
+        }
+
+        .advantage-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .advantage-icon {
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            transition: var(--transition-base);
+        }
+
+        .advantage-item:hover .advantage-icon {
+            transform: scale(1.1);
+            color: var(--hover-color);
+        }
+
+        .advantage-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .advantage-description {
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            background-color: var(--card-bg);
+            text-align: center;
+            padding: 32px 20px;
+            color: #4b5563;
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin: 4px 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                padding: 32px 0;
+            }
+
+            .feature-card {
+                padding: 24px;
             }
         }
 
@@ -146,17 +250,22 @@
             }
         }
 
-        @media (max-width: 768px) {
-            .features {
-                grid-template-columns: 1fr;
-            }
+        .feature-card, .advantage-item {
+            animation: fadeInUp 0.6s ease backwards;
+        }
 
-            h1 {
-                font-size: 2rem;
-            }
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
 
-            .subtitle {
-                font-size: 1rem;
+        .advantage-item:nth-child(1) { animation-delay: 0.2s; }
+        .advantage-item:nth-child(2) { animation-delay: 0.3s; }
+        .advantage-item:nth-child(3) { animation-delay: 0.4s; }
+        .advantage-item:nth-child(4) { animation-delay: 0.5s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .feature-card, .advantage-item {
+                animation: none;
             }
         }
     </style>
@@ -164,9 +273,9 @@
 </head>
 <body>
     <header>
-        <div class="header-content">
+        <div class="container">
             <h1>科师校园导航数据生成系统</h1>
-            <p class="subtitle">一站式校园导航数据管理平台，轻松生成和管理校园导航所需的各种数据</p>
+            <p class="subtitle">一站式校园导航数据管理平台，让校园导航更智能、更便捷</p>
         </div>
     </header>
 
@@ -186,7 +295,7 @@
                     <i class="fas fa-robot"></i>
                 </div>
                 <h2 class="feature-title">AI问答管理</h2>
-                <p class="feature-description">创建和管理智能问答系统所需的问题和答案，提升用户体验。</p>
+                <p class="feature-description">创建和管理智能问答系统所需的问题和答案，提供即时、准确的校园信息咨询。</p>
                 <a href="qa.html" class="cta-button">开始管理</a>
             </div>
 
@@ -201,20 +310,64 @@
         </div>
     </div>
 
+    <section class="advantages">
+        <div class="container">
+            <h2 class="advantages-title">系统优势</h2>
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="advantage-title">高效便捷</h3>
+                    <p class="advantage-description">简单直观的操作界面，快速完成数据录入和管理</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="advantage-title">数据安全</h3>
+                    <p class="advantage-description">采用腾讯云存储，确保数据安全可靠</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fas fa-sync"></i>
+                    </div>
+                    <h3 class="advantage-title">实时同步</h3>
+                    <p class="advantage-description">数据实时同步到小程序，确保信息及时更新</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="advantage-title">智能管理</h3>
+                    <p class="advantage-description">支持批量导入导出，智能分类管理</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer>
-        <p>此网站用于科师校园导航小程序数据生成</p>
+        <p>本项目由 <a href="https://github.com/peng1031" target="_blank" style="color: var(--primary-color); text-decoration: none;">任众</a>  <a href="https://github.com/xiaou61" target="_blank" style="color: var(--primary-color); text-decoration: none;">李子凡</a> 开发</p>
         <p>© 2025 科师校园导航数据生成系统 - 版权所有</p>
     </footer>
 
     <script>
-        // 添加卡片点击效果
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.addEventListener('click', function() {
-                this.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    this.style.transform = 'translateY(-5px)';
-                }, 100);
+        // 添加滚动动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
             });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.feature-card, .advantage-item').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            observer.observe(element);
         });
     </script>
 </body>

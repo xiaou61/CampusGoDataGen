@@ -6,12 +6,19 @@
     <title>科师校园导航数据生成系统 - AI问答管理</title>
     <style>
         :root {
-            --primary-color: #1890ff;
+            --primary-color: #2563eb;
             --secondary-color: #52c41a;
             --danger-color: #ff4d4f;
-            --background-color: #f0f2f5;
+            --background-color: #ffffff;
+            --card-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #1d4ed8;
+            --transition-base: all 0.3s ease;
             --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            --transition: all 0.3s ease;
+            --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --text-color: #1f2937;
+            --text-secondary: #4b5563;
+            --border-radius: 8px;
         }
 
         * {
@@ -23,22 +30,57 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: var(--background-color);
-            color: #333;
+            color: var(--text-color);
             line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* 隐藏滚动条但保持可滚动 */
+        .form-section::-webkit-scrollbar,
+        .list-section::-webkit-scrollbar {
+            display: none;
+        }
+
+        .form-section,
+        .list-section {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
 
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 100%;
+            height: calc(100vh - 88px);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary-color), #096dd9);
+            background-color: var(--primary-color);
             color: white;
-            padding: 20px 0;
-            margin-bottom: 24px;
+            padding: 24px 0;
+            margin-bottom: 0;
             box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            height: 88px;
+            box-sizing: border-box;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            opacity: 0.1;
         }
 
         .header-content {
@@ -48,94 +90,126 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin: 0;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .back-button {
             color: white;
             text-decoration: none;
             font-size: 1rem;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 4px;
-            transition: var(--transition);
+            border-radius: var(--border-radius);
+            transition: var(--transition-base);
             display: flex;
             align-items: center;
             gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
         }
 
         .back-button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
         }
 
         .content {
             display: grid;
             grid-template-columns: 350px 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
+            gap: 0;
+            height: 100%;
+            overflow: hidden;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        @media (max-width: 992px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .form-section, .list-section {
+        .form-section {
             background: white;
-            border-radius: 8px;
             padding: 24px;
             box-shadow: var(--card-shadow);
+            height: 100%;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            border-radius: var(--border-radius);
+        }
+
+        .list-section {
+            background: white;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            height: 100%;
+            overflow-y: auto;
+            margin-left: 24px;
+            border-radius: var(--border-radius);
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
             font-size: 0.9rem;
             margin-bottom: 8px;
-            color: #666;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            transition: var(--transition-base);
+            background: #fafafa;
         }
 
         textarea {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #d9d9d9;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            min-height: 100px;
+            min-height: 150px;
             resize: vertical;
         }
 
-        textarea:focus {
+        input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+            background: white;
         }
 
         .button {
             background-color: var(--primary-color);
             color: white;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
             cursor: pointer;
             font-size: 0.9rem;
-            transition: var(--transition);
+            transition: var(--transition-base);
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-weight: 500;
         }
 
         .button:hover {
-            background-color: #40a9ff;
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .button:active {
+            transform: translateY(0);
         }
 
         .button.secondary {
@@ -144,6 +218,7 @@
 
         .button.secondary:hover {
             background-color: #73d13d;
+            box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);
         }
 
         .button.danger {
@@ -152,64 +227,61 @@
 
         .button.danger:hover {
             background-color: #ff7875;
+            box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);
         }
 
         .qa-item {
             background: white;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
             box-shadow: var(--card-shadow);
-            transition: var(--transition);
+            transition: var(--transition-base);
+            border: 1px solid var(--border-color);
         }
 
         .qa-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--hover-shadow);
+            border-color: #e6f7ff;
         }
 
         .qa-item h3 {
             color: var(--primary-color);
-            margin-bottom: 8px;
-            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
         .qa-item p {
-            margin-bottom: 6px;
-            color: #666;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
             font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         .qa-item .actions {
-            margin-top: 12px;
+            margin-top: 16px;
             display: flex;
-            gap: 8px;
-        }
-
-        .download-section {
-            text-align: center;
-            margin-top: 24px;
-        }
-
-        .download-button {
-            background-color: var(--secondary-color);
-            padding: 12px 24px;
-            font-size: 1rem;
-        }
-
-        .download-button:hover {
-            background-color: #73d13d;
+            gap: 12px;
         }
 
         .error-message {
             background-color: #fff2f0;
             border: 1px solid #ffccc7;
-            border-radius: 4px;
-            padding: 12px;
-            margin: 12px 0;
-            color: #ff4d4f;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin: 16px 0;
+            color: var(--danger-color);
             font-size: 0.9rem;
             display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .error-message.success {
+            background-color: #f6ffed;
+            border-color: #b7eb8f;
+            color: var(--secondary-color);
         }
 
         .error-message.show {
@@ -218,17 +290,27 @@
 
         .error-message pre {
             background: #fafafa;
-            padding: 8px;
-            border-radius: 4px;
-            margin-top: 8px;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            margin-top: 12px;
             overflow-x: auto;
             font-size: 0.85rem;
+            border: 1px solid #ffccc7;
         }
 
-        .error-line {
-            background-color: #fff1f0;
-            padding: 2px 4px;
-            border-radius: 2px;
+        .error-message.success pre {
+            border-color: #b7eb8f;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .file-upload {
@@ -251,15 +333,68 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 12px;
+            padding: 12px;
             background: #fafafa;
-            border: 1px dashed #d9d9d9;
-            border-radius: 4px;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
             cursor: pointer;
+            transition: var(--transition-base);
         }
 
         .file-upload-label:hover {
             border-color: var(--primary-color);
+            background: #f0f7ff;
+        }
+
+        .download-button {
+            background-color: var(--secondary-color);
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-button:hover {
+            background-color: #73d13d;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);
+        }
+
+        @media (max-width: 992px) {
+            .content {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow: visible;
+                padding: 16px;
+            }
+
+            .form-section {
+                position: relative;
+                height: auto;
+                overflow: visible;
+            }
+
+            .list-section {
+                margin-left: 0;
+                margin-top: 24px;
+                height: auto;
+            }
+
+            .container {
+                height: auto;
+                overflow: visible;
+            }
+
+            body {
+                overflow: auto;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -268,9 +403,14 @@
     <header>
         <div class="header-content">
             <h1>AI问答管理</h1>
-            <a href="index.html" class="back-button">
-                <i class="fas fa-arrow-left"></i> 返回首页
-            </a>
+            <div style="display: flex; gap: 12px;">
+                <button onclick="downloadQAJSON()" class="button download-button">
+                    <i class="fas fa-download"></i> 下载JSON数据
+                </button>
+                <a href="index.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i> 返回首页
+                </a>
+            </div>
         </div>
     </header>
 
@@ -316,70 +456,88 @@
                 <div id="qaListContent"></div>
             </div>
         </div>
-
-        <div class="download-section">
-            <button onclick="downloadQAJSON()" class="button download-button">
-                <i class="fas fa-download"></i> 下载JSON数据
-            </button>
-        </div>
     </div>
 
     <script>
         const qaData = [];
         let editingQAId = null;
+        let cos = null;
+        let cosConfig = null;
+
+        // 重置所有数据
+        function resetAll() {
+            qaData.length = 0;
+            editingQAId = null;
+            cos = null;
+            cosConfig = null;
+            resetForm();
+            displayQA();
+        }
+
 
         // 显示错误信息
-        function showError(message, details = null) {
+        function showError(message, details = null, type = 'error') {
             const errorDiv = document.getElementById('errorMessage');
-            let errorContent = `<strong>错误：</strong> ${message}`;
+            let errorContent = `<strong>${type === 'error' ? '错误' : '提示'}：</strong> ${message}`;
             
             if (details) {
                 errorContent += `<pre>${details}</pre>`;
             }
             
             errorDiv.innerHTML = errorContent;
-            errorDiv.classList.add('show');
+            errorDiv.className = `error-message show ${type}`;
             
-            // 5秒后自动隐藏错误信息
+            // 15秒后自动隐藏错误信息
             setTimeout(() => {
                 errorDiv.classList.remove('show');
-            }, 5000);
+            }, 15000);
         }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCOSConfig().catch(error => {
+                console.error('初始化失败:', error);
+            });
+        });
 
         // 加载JSON文件
         function loadJSONFile(event) {
             const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const jsonData = JSON.parse(e.target.result);
-                        
-                        // 验证JSON数据结构
-                        if (!Array.isArray(jsonData)) {
-                            throw new Error('JSON数据必须是数组格式');
-                        }
+            if (!file) return;
 
-                        // 验证每个问答的数据结构
-                        jsonData.forEach((qa, index) => {
-                            if (!qa.id || !qa.question || !qa.answer) {
-                                throw new Error(`第${index + 1}个问答数据格式错误：缺少必要字段(id, question, answer)`);
-                            }
-                        });
-
-                        qaData.length = 0; // 清空现有数据
-                        jsonData.forEach(qa => qaData.push(qa));
-                        displayQA();
-                    } catch (error) {
-                        showError('JSON文件格式错误', error.message);
-                        console.error('JSON解析错误:', error);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+                    
+                    // 验证JSON数据结构
+                    if (!Array.isArray(jsonData)) {
+                        throw new Error('JSON数据必须是数组格式');
                     }
-                };
-                reader.onerror = function() {
-                    showError('文件读取错误', '无法读取文件，请确保文件未被损坏且具有正确的访问权限');
-                };
-                reader.readAsText(file);
-            }
+
+                    // 验证每个问答的数据结构
+                    jsonData.forEach((qa, index) => {
+                        if (!qa.id || !qa.question || !qa.answer) {
+                            throw new Error(`第${index + 1}个问答数据格式错误：缺少必要字段(id, question, answer)`);
+                        }
+                    });
+
+                    qaData.length = 0; // 清空现有数据
+                    jsonData.forEach(qa => qaData.push(qa));
+                    displayQA();
+                    showError('JSON文件加载成功', null, 'success');
+                } catch (error) {
+                    showError('JSON文件格式错误', error.message);
+                    console.error('JSON解析错误:', error);
+                }
+            };
+            reader.onerror = function() {
+                showError('文件读取错误', '无法读取文件，请确保文件未被损坏且具有正确的访问权限');
+            };
+            reader.readAsText(file);
+
+            // 重置文件输入框，确保下次选择相同文件时也能触发事件
+            event.target.value = '';
         }
 
         // 添加问答
@@ -448,9 +606,19 @@
 
         // 删除问答
         function deleteQA(qaId) {
-            if (confirm('确定要删除这个问答吗？')) {
+            if (confirm('确定要删除这个问答吗？此操作不可恢复。')) {
                 const qaIndex = qaData.findIndex(qa => qa.id === qaId);
                 if (qaIndex !== -1) {
+                    const qa = qaData[qaIndex];
+                    // 删除所有图片
+                    qa.images.forEach(imageUrl => {
+                        const key = imageUrl.split('/').pop();
+                        cos.deleteObject({
+                            Bucket: cosConfig.Bucket,
+                            Region: cosConfig.Region,
+                            Key: `images/${key}`
+                        });
+                    });
                     qaData.splice(qaIndex, 1);
                     displayQA();
                 }
@@ -505,6 +673,68 @@
                 URL.revokeObjectURL(url);
             } catch (error) {
                 showError('下载失败', error.message);
+            }
+        }
+
+        // 编辑问答
+        function editQA(qaId) {
+            const qa = qaData.find(q => q.id === qaId);
+            if (qa) {
+                document.getElementById('question').value = qa.question;
+                document.getElementById('answer').value = qa.answer;
+                
+                const imageList = document.getElementById('imageList');
+                imageList.innerHTML = '';
+                qa.images.forEach(imageUrl => {
+                    const key = imageUrl.split('/').pop();
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        ${imageUrl}
+                        <button onclick="deleteImage(this, '${key}')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    imageList.appendChild(listItem);
+                });
+
+                const keywordList = document.getElementById('keywordList');
+                keywordList.innerHTML = '';
+                qa.keywords.forEach(keyword => {
+                    const keywordElement = document.createElement('span');
+                    keywordElement.classList.add('keyword');
+                    keywordElement.innerHTML = `
+                        ${keyword}
+                        <button onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    keywordList.appendChild(keywordElement);
+                });
+
+                editingQAId = qaId;
+                document.getElementById('updateButton').style.display = 'inline-block';
+                updateImagePreviews();
+            }
+        }
+
+        // 删除问答
+        function deleteQA(qaId) {
+            if (confirm('确定要删除这个问答吗？此操作不可恢复。')) {
+                const qaIndex = qaData.findIndex(qa => qa.id === qaId);
+                if (qaIndex !== -1) {
+                    const qa = qaData[qaIndex];
+                    // 删除所有图片
+                    qa.images.forEach(imageUrl => {
+                        const key = imageUrl.split('/').pop();
+                        cos.deleteObject({
+                            Bucket: cosConfig.Bucket,
+                            Region: cosConfig.Region,
+                            Key: `images/${key}`
+                        });
+                    });
+                    qaData.splice(qaIndex, 1);
+                    displayQA();
+                }
             }
         }
     </script>
