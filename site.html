@@ -677,7 +677,7 @@
             <h1>校园地点管理</h1>
             <div style="display: flex; gap: 12px;">
                 <button onclick="downloadSiteJSON()" class="button download-button">
-                    <i class="fas fa-download"></i> 下载JSON数据
+                    <i class="fas fa-download"></i> 下载JS数据
                 </button>
             <a href="index.html" class="back-button">
                 <i class="fas fa-arrow-left"></i> 返回首页
@@ -692,13 +692,13 @@
                 <h2>添加/编辑地点</h2>
                 <div class="error-message" id="errorMessage"></div>
                 <div class="form-group">
-                    <label for="jsonFile">上传JSON文件:</label>
+                    <label for="jsonFile">上传JS文件:</label>
                     <div class="file-upload">
                         <div class="file-upload-label">
                             <i class="fas fa-upload"></i>
                             <span>选择文件</span>
                         </div>
-                        <input type="file" id="jsonFile" accept=".json" onchange="loadJSONFile(event)">
+                        <input type="file" id="jsonFile" accept=".js" onchange="loadJSFile(event)">
                     </div>
                 </div>
 
@@ -902,67 +902,70 @@
             });
         });
 
-        // 加载JSON文件
-        function loadJSONFile(event) {
+        // 加载JS文件
+        function loadJSFile(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        // 预处理 JSON 字符串，移除属性名的双引号
-                        let jsonStr = e.target.result;
-                        jsonStr = jsonStr.replace(/"([^"]+)":/g, '$1:');
-                        
-                        // 使用 Function 构造器来解析 JSON
-                        const jsonData = (new Function('return ' + jsonStr))();
-                        
-                        // 验证JSON数据结构
-                        if (!Array.isArray(jsonData)) {
-                            throw new Error('JSON数据必须是数组格式');
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    // 使用 Function 构造器来执行 JS 代码
+                    const jsContent = e.target.result;
+                    // 检查是否包含 export const
+                    if (!jsContent.includes('export const site_data =')) {
+                        throw new Error('JS文件格式错误：缺少 export const site_data = 声明');
+                    }
+                    // 提取数据部分
+                    const dataStr = jsContent.replace('export const site_data =', '').trim();
+                    const jsData = (new Function('return ' + dataStr))();
+                    
+                    // 验证数据结构
+                    if (!Array.isArray(jsData)) {
+                        throw new Error('JS数据必须是数组格式');
+                    }
+
+                    // 验证每个分类的数据结构
+                    jsData.forEach((category, index) => {
+                        if (!category.id || !category.name || !Array.isArray(category.list)) {
+                            throw new Error(`第${index + 1}个分类数据格式错误：缺少必要字段(id, name, list)`);
                         }
 
-                        // 验证每个分类的数据结构
-                        jsonData.forEach((category, index) => {
-                            if (!category.id || !category.name || !Array.isArray(category.list)) {
-                                throw new Error(`第${index + 1}个分类数据格式错误：缺少必要字段(id, name, list)`);
+                        // 验证每个地点的数据结构
+                        category.list.forEach((site, siteIndex) => {
+                            const requiredFields = ['id', 'name', 'aliases', 'img', 'desc', 'latitude', 'longitude'];
+                            const missingFields = requiredFields.filter(field => !(field in site));
+                            
+                            if (missingFields.length > 0) {
+                                throw new Error(`第${index + 1}个分类中的第${siteIndex + 1}个地点缺少必要字段：${missingFields.join(', ')}`);
                             }
 
-                            // 验证每个地点的数据结构
-                            category.list.forEach((site, siteIndex) => {
-                                const requiredFields = ['id', 'name', 'aliases', 'img', 'desc', 'latitude', 'longitude'];
-                                const missingFields = requiredFields.filter(field => !(field in site));
-                                
-                                if (missingFields.length > 0) {
-                                    throw new Error(`第${index + 1}个分类中的第${siteIndex + 1}个地点缺少必要字段：${missingFields.join(', ')}`);
-                                }
+                            // 验证数值类型
+                            if (typeof site.latitude !== 'number' || typeof site.longitude !== 'number') {
+                                throw new Error(`第${index + 1}个分类中的第${siteIndex + 1}个地点的经纬度必须是数字类型`);
+                            }
 
-                                // 验证数值类型
-                                if (typeof site.latitude !== 'number' || typeof site.longitude !== 'number') {
-                                    throw new Error(`第${index + 1}个分类中的第${siteIndex + 1}个地点的经纬度必须是数字类型`);
-                                }
-
-                                // 验证图片数组
-                                if (site.images && !Array.isArray(site.images)) {
-                                    throw new Error(`第${index + 1}个分类中的第${siteIndex + 1}个地点的images字段必须是数组`);
-                                }
-                            });
+                            // 验证图片数组
+                            if (site.images && !Array.isArray(site.images)) {
+                                throw new Error(`第${index + 1}个分类中的第${siteIndex + 1}个地点的images字段必须是数组`);
+                            }
                         });
+                    });
 
-                        categories.length = 0; // 清空现有数据
-                        jsonData.forEach(category => categories.push(category));
-                        updateCategorySelect();
-                        displaySites();
-                    showError('JSON文件加载成功', null, 'success');
-                    } catch (error) {
-                        showError('JSON文件格式错误', error.message);
-                        console.error('JSON解析错误:', error);
-                    }
-                };
-                reader.onerror = function() {
-                    showError('文件读取错误', '无法读取文件，请确保文件未被损坏且具有正确的访问权限');
-                };
-                reader.readAsText(file);
+                    categories.length = 0; // 清空现有数据
+                    jsData.forEach(category => categories.push(category));
+                    updateCategorySelect();
+                    displaySites();
+                    showError('JS文件加载成功', null, 'success');
+                } catch (error) {
+                    showError('JS文件格式错误', error.message);
+                    console.error('JS解析错误:', error);
+                }
+            };
+            reader.onerror = function() {
+                showError('文件读取错误', '无法读取文件，请确保文件未被损坏且具有正确的访问权限');
+            };
+            reader.readAsText(file);
 
             // 重置文件输入框，确保下次选择相同文件时也能触发事件
             event.target.value = '';
@@ -1448,7 +1451,7 @@
             updateImagePreviews();
         }
 
-        // 下载JSON
+        // 下载JS
         function downloadSiteJSON() {
             try {
                 if (categories.length === 0) {
@@ -1456,15 +1459,14 @@
                 }
 
                 // 将数据转换为不带双引号的格式
-                const jsonStr = JSON.stringify(categories, null, 2)
-                    .replace(/"([^"]+)":/g, '$1:')  // 移除属性名的双引号
-                    .replace(/"([^"]+)"/g, "'$1'"); // 将字符串值的双引号改为单引号
+                const jsStr = 'export const site_data = ' + JSON.stringify(categories, null, 2)
+                    .replace(/"([^"]+)":/g, '$1:');  // 移除属性名的双引号
 
-                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const blob = new Blob([jsStr], { type: 'application/javascript' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = 'site_data.json';
+                link.download = 'site_data.js';
                 link.click();
                 URL.revokeObjectURL(url);
             } catch (error) {

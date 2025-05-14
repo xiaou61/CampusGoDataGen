@@ -405,7 +405,7 @@
             <h1>AI问答管理</h1>
             <div style="display: flex; gap: 12px;">
                 <button onclick="downloadQAJSON()" class="button download-button">
-                    <i class="fas fa-download"></i> 下载JSON数据
+                    <i class="fas fa-download"></i> 下载JS数据
                 </button>
                 <a href="index.html" class="back-button">
                     <i class="fas fa-arrow-left"></i> 返回首页
@@ -420,13 +420,13 @@
                 <h2>添加/编辑问答</h2>
                 <div class="error-message" id="errorMessage"></div>
                 <div class="form-group">
-                    <label for="jsonFile">上传JSON文件:</label>
+                    <label for="jsonFile">上传JS文件:</label>
                     <div class="file-upload">
                         <div class="file-upload-label">
                             <i class="fas fa-upload"></i>
                             <span>选择文件</span>
                         </div>
-                        <input type="file" id="jsonFile" accept=".json" onchange="loadJSONFile(event)">
+                        <input type="file" id="jsonFile" accept=".js" onchange="loadJSFile(event)">
                     </div>
                 </div>
                 <form id="qaForm">
@@ -500,35 +500,43 @@
             });
         });
 
-        // 加载JSON文件
-        function loadJSONFile(event) {
+        // 加载JS文件
+        function loadJSFile(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const jsonData = JSON.parse(e.target.result);
+                    // 使用 Function 构造器来执行 JS 代码
+                    const jsContent = e.target.result;
+                    // 检查是否包含 export const
+                    if (!jsContent.includes('const qaData =')) {
+                        throw new Error('JS文件格式错误：缺少 export const qaData = 声明');
+                    }
+                    // 提取数据部分
+                    const dataStr = jsContent.replace('export const qaData =', '').trim();
+                    const jsData = (new Function('return ' + dataStr))();
                     
-                    // 验证JSON数据结构
-                    if (!Array.isArray(jsonData)) {
-                        throw new Error('JSON数据必须是数组格式');
+                    // 验证数据结构
+                    if (!Array.isArray(jsData)) {
+                        throw new Error('JS数据必须是数组格式');
                     }
 
                     // 验证每个问答的数据结构
-                    jsonData.forEach((qa, index) => {
+                    jsData.forEach((qa, index) => {
                         if (!qa.id || !qa.question || !qa.answer) {
                             throw new Error(`第${index + 1}个问答数据格式错误：缺少必要字段(id, question, answer)`);
                         }
                     });
 
                     qaData.length = 0; // 清空现有数据
-                    jsonData.forEach(qa => qaData.push(qa));
+                    jsData.forEach(qa => qaData.push(qa));
                     displayQA();
-                    showError('JSON文件加载成功', null, 'success');
+                    showError('JS文件加载成功', null, 'success');
                 } catch (error) {
-                    showError('JSON文件格式错误', error.message);
-                    console.error('JSON解析错误:', error);
+                    showError('JS文件格式错误', error.message);
+                    console.error('JS解析错误:', error);
                 }
             };
             reader.onerror = function() {
@@ -656,19 +664,22 @@
             document.getElementById('updateButton').style.display = 'none';
         }
 
-        // 下载JSON
+        // 下载JS
         function downloadQAJSON() {
             try {
                 if (qaData.length === 0) {
                     throw new Error('没有可下载的数据');
                 }
 
-                const jsonData = JSON.stringify(qaData, null, 2);
-                const blob = new Blob([jsonData], { type: 'application/json' });
+                // 将数据转换为不带双引号的格式
+                const jsStr = 'const qaData = ' + JSON.stringify(qaData, null, 2)
+                    .replace(/"([^"]+)":/g, '$1:');  // 移除属性名的双引号
+
+                const blob = new Blob([jsStr], { type: 'application/javascript' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = 'qa_data.json';
+                link.download = 'qa_data.js';
                 link.click();
                 URL.revokeObjectURL(url);
             } catch (error) {
